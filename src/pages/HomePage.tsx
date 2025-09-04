@@ -1,18 +1,18 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Slider from "@/components/Slider";
-import Feature from "@/components/Feature";
+// import Feature from "@/components/Feature";
 import Testimonial from "@/components/Testimonial";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 const HomePage = () => {
     return (
-        <div className="bg-[var(--color-background)]">
+        <div className="font-family bg-[var(--color-background)]">
             <Navbar />
             <Hero />
             <Slider />
-            <Feature />
+            {/* <Feature /> */}
             <Testimonial />
             <FAQ />
             <Footer />

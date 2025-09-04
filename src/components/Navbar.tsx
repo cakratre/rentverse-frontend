@@ -1,32 +1,25 @@
-import React from "react";
-
 const Navbar = () => {
-  return (
-    <nav className="bg-[var(--color-background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          {/* Brand */}
-          <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-blue-600">RENTVERSE</h1>
-          </div>
+    return (
+        <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center">
+            <div className="w-[300px]">
+            <div className="flex justify-between p-5 rounded-full border border-black/5 bg-transparent backdrop-blur">
+                <ul>
+                    RENTVERSE
+                </ul>
+                <ul className="flex gap-5">
+                    <li>
+                        <a href="">Testimoni</a>
+                    </li>
+                    <li>
+                        <a href="">FAQ</a>
+                    </li>
+                </ul>
+            </div>
+            </div>
 
-          {/* Nav Items */}
-          <div className="hidden md:flex space-x-8">
-            <a href="#feature" className="text-gray-700 hover:text-blue-600">
-              Feature
-            </a>
-            <a href="#testimonial" className="text-gray-700 hover:text-blue-600">
-              Testimonial
-            </a>
-            <a href="#faq" className="text-gray-700 hover:text-blue-600">
-              FAQ
-            </a>
-          </div>
 
-        </div>
-      </div>
-    </nav>
-  );
+        </nav>
+    )
 };
 
 export default Navbar;
