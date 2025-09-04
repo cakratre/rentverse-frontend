@@ -4,56 +4,56 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const Testimonial = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const testimonials = [
+const testimonials = [
     {
-      name: "Yogawan",
-      role: "CEO of House of Ovee",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
-      profile: "./profile.png",
-      company: "./company.png",
+        name: "Yogawan",
+        role: "CEO of House of Ovee",
+        content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
+        profile: "./profile.png",
+        company: "./company.png",
     },
     {
-      name: "Agil Ghani",
-      role: "CTO of TechStart",
-      content:
-        "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
-      profile: "./profile.png",
-      company: "./company.png",
+        name: "Aditya",
+        role: "CTO of TechStart",
+        content:
+            "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
+        profile: "./profile.png",
+        company: "./company.png",
     },
     {
-      name: "Sultan Akmal",
-      role: "Founder of CreativeLabs",
-      content:
-        "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
-      profile: "./profile.png",
-      company: "./company.png",
+        name: "Pratama",
+        role: "Founder of CreativeLabs",
+        content:
+            "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
+        profile: "./profile.png",
+        company: "./company.png",
     },
     {
-      name: "Yogawan",
-      role: "CEO of House of Ovee",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
-      profile: "./profile.png",
-      company: "./company.png",
+        name: "Yogawan",
+        role: "CEO of House of Ovee",
+        content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
+        profile: "./profile.png",
+        company: "./company.png",
     },
     {
-      name: "Agil Ghani",
-      role: "CTO of TechStart",
-      content:
-        "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
-      profile: "./profile.png",
-      company: "./company.png",
+        name: "Aditya",
+        role: "CTO of TechStart",
+        content:
+            "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
+        profile: "./profile.png",
+        company: "./company.png",
     },
     {
-      name: "Sultan Akmal",
-      role: "Founder of CreativeLabs",
-      content:
-        "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
-      profile: "./profile.png",
-      company: "./company.png",
+        name: "Pratama",
+        role: "Founder of CreativeLabs",
+        content:
+            "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
+        profile: "./profile.png",
+        company: "./company.png",
     },
-  ];
+];
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
