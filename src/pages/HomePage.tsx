@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 
 const HomePage = () => {
     return (
-        <div>
+        <div className="bg-[var(--color-background)]">
             <Navbar />
             <Hero />
             <Slider />
