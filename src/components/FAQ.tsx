@@ -24,11 +24,14 @@ const FAQ = () => {
   };
 
   return (
-    <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16">
+    <div className="border-t border-[var(--color-text)]/15 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16">
       <div className="flex flex-col lg:flex-row lg:space-x-16 space-y-8 lg:space-y-0">
+
         {/* Header */}
         <div className="lg:w-1/2">
-          <h1 className="text-lg sm:text-xl md:text-2xl">FAQ</h1>
+          <p className="text-xs p-3 text-black/50 border border-black/15 w-fit rounded-full">
+            Solor sit amet consectetur
+          </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
             Frequently Asked{" "}
             <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
@@ -46,12 +49,12 @@ const FAQ = () => {
         {/* FAQ */}
         <div className="lg:w-1/2 space-y-4">
           {faqData.map((item, index) => (
-            <div key={index} className="border border-black/15 rounded-2xl sm:rounded-3xl overflow-hidden">
+            <div key={index} className="border border-black/15 rounded-3xl sm:rounded-4xl overflow-hidden">
               <button
-                className="w-full text-left p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 hover:bg-gray-200 flex justify-between items-start sm:items-center gap-4"
+                className="w-full text-left p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 flex justify-between items-start sm:items-center gap-4"
                 onClick={() => toggle(index)}
               >
-                <span className="text-sm sm:text-base md:text-lg leading-relaxed flex-1 pr-2">
+                <span className="text-lg sm:text-xl md:text-2xl leading-relaxed flex-1 pr-2">
                   {item.question}
                 </span>
                 <div className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] p-2 sm:p-3 md:p-4 lg:p-5 text-white rounded-full flex-shrink-0">
