@@ -3,10 +3,10 @@ import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
     return (
-        <div className="flex justify-start items-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 bg-[var(--color-background)] relative">
+        <div className="pt-32 flex justify-start items-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 bg-[var(--color-background)] relative">
             
             {/* Hero Content */}
-            <div className="pb-16 pt-16 flex flex-col w-full max-w-[610px] gap-6 sm:gap-8 md:gap-10">
+            <div className="z-10 pb-16 pt-16 flex flex-col w-full max-w-[610px] gap-6 sm:gap-8 md:gap-10">
 
                 {/* Headline */}
                 <h1 className="text-[var(--color-text)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[96px] leading-none font-poppins">

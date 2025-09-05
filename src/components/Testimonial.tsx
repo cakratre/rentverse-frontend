@@ -4,56 +4,56 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const Testimonial = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-const testimonials = [
-    {
-        name: "Yogawan",
-        role: "CEO of House of Ovee",
-        content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
-        profile: "./profile.png",
-        company: "./company.png",
-    },
-    {
-        name: "Aditya",
-        role: "CTO of TechStart",
-        content:
-            "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
-        profile: "./profile.png",
-        company: "./company.png",
-    },
-    {
-        name: "Pratama",
-        role: "Founder of CreativeLabs",
-        content:
-            "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
-        profile: "./profile.png",
-        company: "./company.png",
-    },
-    {
-        name: "Yogawan",
-        role: "CEO of House of Ovee",
-        content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
-        profile: "./profile.png",
-        company: "./company.png",
-    },
-    {
-        name: "Aditya",
-        role: "CTO of TechStart",
-        content:
-            "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
-        profile: "./profile.png",
-        company: "./company.png",
-    },
-    {
-        name: "Pratama",
-        role: "Founder of CreativeLabs",
-        content:
-            "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
-        profile: "./profile.png",
-        company: "./company.png",
-    },
-];
+  const testimonials = [
+      {
+          name: "Yogawan",
+          role: "CEO of House of Ovee",
+          content:
+              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
+          profile: "./profile.png",
+          company: "https://static.cdnlogo.com/logos/m/59/meta.svg",
+      },
+      {
+          name: "Aditya",
+          role: "CTO of TechStart",
+          content:
+              "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
+          profile: "./profile.png",
+          company: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png",
+      },
+      {
+          name: "Pratama",
+          role: "Founder of CreativeLabs",
+          content:
+              "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
+          profile: "./profile.png",
+          company: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png",
+      },
+      {
+          name: "Yogawan",
+          role: "CEO of House of Ovee",
+          content:
+              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
+          profile: "./profile.png",
+          company: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Oracle_logo.svg/2560px-Oracle_logo.svg.png",
+      },
+      {
+          name: "Aditya",
+          role: "CTO of TechStart",
+          content:
+              "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
+          profile: "./profile.png",
+          company: "./company.png",
+      },
+      {
+          name: "Pratama",
+          role: "Founder of CreativeLabs",
+          content:
+              "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
+          profile: "./profile.png",
+          company: "./company.png",
+      },
+  ];
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {

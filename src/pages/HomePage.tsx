@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Slider from "@/components/Slider";
 // import Feature from "@/components/Feature";
@@ -26,7 +26,7 @@ const HomePage = () => {
 
   return (
     <div className="font-poppins bg-[var(--color-background)]">
-      {/* <Navbar /> */}
+      <Navbar />
       <Hero />
       <Slider />
       {/* <Feature /> */}
