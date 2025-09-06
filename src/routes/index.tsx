@@ -16,6 +16,7 @@ import TenantProfilePage from "@/pages/TenantProfilePage";
 
 // Owner
 import OwnerHomePage from "@/pages/OwnerHomePage";
+import OwnerAddPropertyPage from "@/pages/OwnerAddPropertyPage";
 
 // Admin
 import AdminApprovalsPage from "@/pages/AdminApprovalsPage";
@@ -41,6 +42,7 @@ export const routes = [
 
   // Owner
   { path: "/owner", element: <OwnerHomePage /> },
+  { path: "/owner/property/add", element: <OwnerAddPropertyPage /> },
 
   // Admin
   { path: "/admin", element: <AdminApprovalsPage /> },
