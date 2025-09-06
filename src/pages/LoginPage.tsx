@@ -4,11 +4,16 @@ import { useState } from "react";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add login logic here
+
+    console.log({
+      email,
+      password,
+    });
   };
 
   return (
@@ -17,6 +22,7 @@ const LoginPage = () => {
         onSubmit={handleSubmit}
         className="px-16 py-8 flex flex-col gap-5 bg-[var(--color-background)] rounded-3xl w-[512px]"
       >
+
         {/* Header */}
         <div className="flex flex-col justify-center items-center text-center">
           <img className="w-[256px]" src="/logo.png" alt="Logo" />
@@ -35,6 +41,8 @@ const LoginPage = () => {
               id="email"
               type="email"
               className="p-5 w-full outline-none focus:ring-0 rounded-r-full"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Masukan email..."
             />
           </div>
