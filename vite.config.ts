@@ -14,4 +14,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    allowedHosts: [
+      'homelab-rentverse-by-cakratre.yogaone.me'
+    ]
+  }
+
 })

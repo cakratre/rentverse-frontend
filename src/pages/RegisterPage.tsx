@@ -1,213 +1,173 @@
-import { Mail, User, Lock, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Mail, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { registerUser } from "@/services/auth.service";
+
+import InputField from "@/components/InputField";
+import SelectField from "@/components/SelectField";
+import PasswordField from "@/components/PasswordField";
 
 const RegisterPage = () => {
-  // Register State
-  const [fullName, setFullName] = useState("");
-  const [username, setUsername] = useState("");
+  // Form State
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState(""); 
+  const [role, setRole] = useState("");
 
-  // Utils
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  // Utils State
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
+  const navigate = useNavigate();
 
-  // Handle Register Submit
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Validation
+  const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+
+  const confirmValid = confirmPassword === password && confirmPassword.length > 0;
+
+  // Handle Submit
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+    setLoading(true);
 
-    console.log({
-      fullName,
-      username,
-      email,
-      role,
-      password,
-    });
+    try {
+      const res = await registerUser({
+        name,
+        email,
+        password,
+        role,
+      });
+
+      if (res.success) {
+        setSuccessMsg(res.message);
+        setTimeout(() => navigate("/auth/login"), 1500);
+      }
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } }).response?.data?.message || "Register gagal!";
+      setErrorMsg(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const passwordValid =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
-
-  const confirmValid =
-    confirmPassword === password && confirmPassword.length > 0;
-
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] flex justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] flex justify-center items-center p-4">
       <form
         onSubmit={handleSubmit}
-        className="px-16 py-8 flex flex-col gap-5 bg-[var(--color-background)] rounded-3xl w-[512px]"
+        className="px-4 py-6 sm:px-8 sm:py-8 lg:px-16 lg:py-8 flex flex-col gap-5 bg-[var(--color-background)] rounded-4xl w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl"
       >
         {/* Header */}
-        {/* <div className="flex flex-col justify-center items-center text-center">
-          <img className="w-[256px]" src="/logo.png" alt="Logo" />
+        <div className="flex flex-col justify-center items-center text-center">
           <h1 className="text-3xl">Create Account</h1>
-          <p>Lorem ipsum dolor sit amet consectetur</p>
-        </div> */}
-
-        {/* Full Name */}
-        <div>
-          <label htmlFor="fullname" className="block mb-1 ml-5">
-            Full Name
-          </label>
-          <div className="flex items-center gap-3 border border-black/15 pl-5 rounded-full">
-            <User className="text-gray-500" size={18} />
-            <input
-              id="fullname"
-              type="text"
-              className="p-5 w-full outline-none focus:ring-0 rounded-r-full"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Masukan fullname..."
-            />
-          </div>
+          <p>Sign up to create account</p>
+          <img className="h-[64px] mt-5" src="/rentverse.png" alt="Logo" />
         </div>
 
-        {/* Username */}
-        <div>
-          <label htmlFor="username" className="block mb-1 ml-5">
-            Username
-          </label>
-          <div className="flex items-center gap-3 border border-black/15 pl-5 rounded-full">
-            <User className="text-gray-500" size={18} />
-            <input
-              id="username"
-              type="text"
-              className="p-5 w-full outline-none focus:ring-0 rounded-r-full"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Masukan username..."
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-8">
+          {/* Left Column */}
+          <div className="flex flex-col gap-5 flex-1">
+            {/* Name */}
+            <InputField
+              id="name"
+              label="Name"
+              type="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Masukan name..."
+              icon={<User size={18} />}
+              hint="*Masukan name aktif anda"
             />
-          </div>
-        </div>
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block mb-1 ml-5">
-            Email
-          </label>
-          <div className="flex items-center gap-3 border border-black/15 pl-5 rounded-full">
-            <Mail className="text-gray-500" size={18} />
-            <input
+            {/* Email */}
+            <InputField
               id="email"
+              label="Email"
               type="email"
-              className="p-5 w-full outline-none focus:ring-0 rounded-r-full"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Masukan email..."
+              icon={<Mail size={18} />}
+              hint="*Masukan email aktif anda"
             />
-          </div>
-        </div>
 
-        {/* Role */}
-        <div>
-          <label htmlFor="role" className="block mb-1 ml-5">
-            Role
-          </label>
-          <div className="flex items-center gap-3 border border-black/15 px-5 rounded-full">
-            <select
+            {/* Role */}
+            <SelectField
               id="role"
+              label="Role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="p-5 w-full bg-transparent outline-none focus:ring-0 rounded-full"
-            >
-              <option value="" disabled>
-                Pilih role...
-              </option>
-              <option value="OWNER">Owner</option>
-              <option value="TENANT">Tenant</option>
-            </select>
+              placeholder="Pilih role..."
+              options={[
+                { label: "Owner", value: "Owner" },
+                { label: "Tenant", value: "Tenant" },
+              ]}
+              hint={
+                <>
+                  *Owner, jika kamu pelilik property <br />
+                  *Tenant, jika kamu mau cari property
+                </>
+              }
+            />
           </div>
-        </div>
 
-        {/* Password */}
-        <div>
-          <label htmlFor="password" className="block mb-1 ml-5">
-            Password
-          </label>
-          <div className="flex items-center gap-3 border border-black/15 pl-5 rounded-full relative">
-            <Lock className="text-gray-500" size={18} />
-            <input
+          {/* Right Column */}
+          <div className="flex flex-col gap-5 flex-1">
+            {/* Password */}
+            <PasswordField
               id="password"
-              type={showPassword ? "text" : "password"}
+              label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="p-5 w-full outline-none focus:ring-0 rounded-r-full"
               placeholder="Masukan password..."
+              validationMessage={
+                password.length === 0
+                  ? "*Minimal 8 karakter, harus ada huruf besar, kecil, dan angka"
+                  : passwordValid
+                  ? "✅ Password valid"
+                  : "❌ Password harus ada huruf besar, kecil, dan angka"
+              }
+              isValid={password.length === 0 ? undefined : passwordValid}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 text-gray-500"
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-          <p
-            className={`text-sm mt-1 ml-5 ${
-              password.length === 0
-                ? "text-gray-500"
-                : passwordValid
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
-            {password.length === 0
-              ? "*Minimal 8 karakter, harus ada huruf besar, kecil, dan angka"
-              : passwordValid
-              ? "✅ Password valid"
-              : "❌ Password harus ada huruf besar, kecil, dan angka"}
-          </p>
-        </div>
 
-        {/* Confirm Password */}
-        <div>
-          <label htmlFor="confirmPassword" className="block mb-1 ml-5">
-            Konfirmasi Password
-          </label>
-          <div className="flex items-center gap-3 border border-black/15 pl-5 rounded-full relative">
-            <Lock className="text-gray-500" size={18} />
-            <input
+            {/* Confirm Password */}
+            <PasswordField
               id="confirmPassword"
-              type={showConfirm ? "text" : "password"}
+              label="Konfirmasi Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="p-5 w-full outline-none focus:ring-0 rounded-r-full"
               placeholder="Ulangi password..."
+              hint="*Ulangi kembali password"
+              validationMessage={
+                confirmPassword.length === 0
+                  ? undefined
+                  : confirmValid
+                  ? "✅ Password cocok"
+                  : "❌ Password tidak sama"
+              }
+              isValid={confirmPassword.length === 0 ? undefined : confirmValid}
             />
+
+            {/* Submit */}
             <button
-              type="button"
-              onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-4 text-gray-500"
+              type="submit"
+              disabled={!passwordValid || !confirmValid || !role || loading}
+              className="p-4 sm:p-5 w-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white disabled:opacity-50 disabled:cursor-not-allowed lg:mt-auto"
             >
-              {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+              {loading ? "Processing..." : "Daftar"}
             </button>
           </div>
-          {confirmPassword.length > 0 && (
-            <p
-              className={`text-sm mt-1 ml-5 ${
-                confirmValid ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {confirmValid ? "✅ Password cocok" : "❌ Password tidak sama"}
-            </p>
-          )}
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={!passwordValid || !confirmValid || !role}
-          className="p-5 w-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Daftar
-        </button>
+        {/* Error & Success Message */}
+        {errorMsg && <p className="text-red-600 text-center text-sm sm:text-base">{errorMsg}</p>}
+        {successMsg && <p className="text-green-600 text-center text-sm sm:text-base">{successMsg}</p>}
 
         {/* Have Account */}
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-2 text-sm sm:text-base text-[var(--color-text)]/50">
           <p>Sudah punya akun?</p>
           <Link to={"/auth/login"} className="text-[var(--color-primary)]">
             Masuk
@@ -215,11 +175,12 @@ const RegisterPage = () => {
         </div>
 
         {/* Back to Home */}
-        <div className="flex justify-center gap-2">
-          <Link to={"/"} className="text-gray-600">
+        <div className="flex justify-center">
+          <Link to="/" className="text-xs text-[var(--color-text)]/50">
             Kembali ke beranda
           </Link>
         </div>
+
       </form>
     </div>
   );

@@ -19,8 +19,8 @@ const Button = ({
 
   const variantClasses =
     variant === "elevated"
-      ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:shadow-lg hover:opacity-90"
-      : "border border-black/15 text-gray-800 hover:bg-gray-100";
+      ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:shadow-lg"
+      : "border border-black/15 text-[var(--color-text)]/75 hover:shadow-lg";
 
   return (
     <Link to={to} className={`${baseClasses} ${variantClasses}`}>

@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
     return (
-        <div className="pt-32 flex justify-start items-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 bg-[var(--color-background)] relative">
+        <div className="pt-20 flex justify-start items-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 bg-[var(--color-background)] relative">
             
             {/* Hero Content */}
             <div className="z-10 pb-16 pt-16 flex flex-col w-full max-w-[610px] gap-6 sm:gap-8 md:gap-10">

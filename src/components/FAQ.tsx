@@ -30,7 +30,7 @@ const FAQ = () => {
         {/* Header */}
         <div className="lg:w-1/2">
           <p className="text-xs p-3 text-black/50 border border-black/15 w-fit rounded-full">
-            Solor sit amet consectetur
+            Got Questions?
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
             Frequently Asked{" "}
@@ -38,11 +38,8 @@ const FAQ = () => {
               Clients
             </span>
           </h1>
-          <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint
-            voluptatem magnam corrupti laborum deserunt aliquam perferendis
-            praesentium esse ex fuga libero, ipsum ducimus animi eligendi nisi,
-            accusamus obcaecati illum nobis!
+          <p className="mt-4 text-black/50 text-sm sm:text-base leading-relaxed">
+            RENTVERSE is a property rental platform that makes it simple to search, rent, and manage properties. With modern features and a user-friendly system, renting becomes easier, more transparent, and efficient.
           </p>
         </div>
 

@@ -5,54 +5,54 @@ const Testimonial = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const testimonials = [
-      {
-          name: "Yogawan",
-          role: "CEO of House of Ovee",
-          content:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
-          profile: "./profile.png",
-          company: "https://static.cdnlogo.com/logos/m/59/meta.svg",
-      },
-      {
-          name: "Aditya",
-          role: "CTO of TechStart",
-          content:
-              "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
-          profile: "./profile.png",
-          company: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png",
-      },
-      {
-          name: "Pratama",
-          role: "Founder of CreativeLabs",
-          content:
-              "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
-          profile: "./profile.png",
-          company: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png",
-      },
-      {
-          name: "Yogawan",
-          role: "CEO of House of Ovee",
-          content:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi",
-          profile: "./profile.png",
-          company: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Oracle_logo.svg/2560px-Oracle_logo.svg.png",
-      },
-      {
-          name: "Aditya",
-          role: "CTO of TechStart",
-          content:
-              "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
-          profile: "./profile.png",
-          company: "./company.png",
-      },
-      {
-          name: "Pratama",
-          role: "Founder of CreativeLabs",
-          content:
-              "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
-          profile: "./profile.png",
-          company: "./company.png",
-      },
+    {
+      name: "Ridha",
+      role: "Family Traveler",
+      content:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi.",
+      profile: "./profile.png",
+      company: "https://static.cdnlogo.com/logos/m/59/meta.svg",
+    },
+    {
+      name: "Yogawan",
+      role: "Solo Traveler",
+      content:
+        "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
+      profile: "./profile.png",
+      company: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png",
+    },
+    {
+      name: "Alif",
+      role: "Expat Professional",
+      content:
+        "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
+      profile: "./profile.png",
+      company: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png",
+    },
+    {
+      name: "Joko Supriyanto",
+      role: "Corporate Guest",
+      content:
+        "Sapiente, dolores numquam. Ratione quos doloremque voluptatibus officiis!",
+      profile: "./profile.png",
+      company: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Oracle_logo.svg/2560px-Oracle_logo.svg.png",
+    },
+    {
+      name: "Agil Ghani Istikmal",
+      role: "Student Tenant",
+      content:
+        "Quibusdam asperiores delectus quaerat laboriosam, pariatur vitae minima.",
+      profile: "./profile.png",
+      company: "./company.png",
+    },
+    {
+      name: "Sultan Akmal Ghiffari",
+      role: "Event Group Organizer",
+      content:
+        "Tempora amet explicabo voluptas impedit error deleniti perferendis.",
+      profile: "./profile.png",
+      company: "./company.png",
+    },
   ];
 
   const scroll = (direction: "left" | "right") => {
@@ -72,20 +72,16 @@ const Testimonial = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 sm:gap-0">
         <div>
           <p className="text-xs p-3 text-black/50 border border-black/15 w-fit rounded-full">
-            Solor sit amet consectetur
+            Client Testimonials
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
-            What Our{" "}
+            Hear From Our Happy{" "}
             <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
-              Client
-            </span>{" "}
-            Say
+              Clients
+            </span>
           </h1>
-          <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint
-            voluptatem magnam corrupti laborum deserunt aliquam perferendis
-            praesentium esse ex fuga libero, ipsum ducimus animi eligendi nisi,
-            accusamus obcaecati illum nobis!
+          <p className="mt-4 text-black/50 text-sm sm:text-base leading-relaxed">
+            Discover what our partners and clients say about our rental property services.
           </p>
         </div>
 
