@@ -1,29 +1,29 @@
 // src/routes/index.tsx
-import NotFound from "@/pages/NotFound";
+import NotFound from "@/components/pages/NotFound";
 
 // Guest
-import HomePage from "@/pages/HomePage";
-import LoginPage from "@/pages/LoginPage";
+import HomePage from "@/components/pages/HomePage";
+import LoginPage from "@/components/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 
 // Tenant
 import TenantHomePage from "@/pages/TenantHomePage";
-import TenantPropertyPage from "@/pages/TenantPropertyPage";
-import TenantDetailPropertyPage from "@/pages/TenantDetailPropertyPage";
-import TenantRentalAgreementPage from "@/pages/TenantRentalAgreementPage";
+import TenantPropertyPage from "@/components/pages/TenantPropertyPage";
+import TenantDetailPropertyPage from "@/components/pages/TenantDetailPropertyPage";
+import TenantRentalAgreementPage from "@/components/pages/TenantRentalAgreementPage";
 import TenantDetailRentalAgreementPage from "@/pages/TenantDetailRentalAgreementPage";
-import TenantProfilePage from "@/pages/TenantProfilePage";
+import TenantProfilePage from "@/components/pages/TenantProfilePage";
 
 // Owner
-import OwnerHomePage from "@/pages/OwnerHomePage";
-import OwnerAddPropertyPage from "@/pages/OwnerAddPropertyPage";
+import OwnerHomePage from "@/components/pages/OwnerHomePage";
+import OwnerAddPropertyPage from "@/components/pages/OwnerAddPropertyPage";
 
 // Admin
-import AdminApprovalsPage from "@/pages/AdminApprovalsPage";
+import AdminApprovalsPage from "@/components/pages/AdminApprovalsPage";
 import AdminDetailApprovalsPage from "@/pages/AdminDetailApprovalsPage";
 import AdminManageUserPage from "@/pages/AdminManageUserPage";
 import AdminDetailManageUserPage from "@/pages/AdminDetailManageUserPage";
-import AdminProfilePage from "@/pages/AdminProfilePage";
+import AdminProfilePage from "@/components/pages/AdminProfilePage";
 
 export const routes = [
 
