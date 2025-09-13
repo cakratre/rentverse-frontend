@@ -1,10 +1,10 @@
-import InputField from "@/components/InputField";
+import InputField from "@/components/atoms/InputField";
 import SelectField from "@/components/atoms/SelectField";
 import CheckboxField from "@/components/atoms/CheckboxField";
 import TextareaField from "@/components/atoms/TextareaField";
-import NumberInputField from "@/components/NumberInputField";
+import NumberInputField from "@/components/atoms/NumberInputField";
 import SizeInputField from "@/components/atoms/SizeInputField";
-import ImageUploadPreview from "@/components/ImageUploadPreview";
+import ImageUploadPreview from "@/components/atoms/ImageUploadPreview";
 
 import { useState } from "react";
 import { User, MapPin } from "lucide-react";

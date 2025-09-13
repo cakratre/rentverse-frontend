@@ -1,45 +1,70 @@
-import Button from "@/components/atoms/Button";
-import { ArrowRight } from "lucide-react";
+import { Building, Home, Building2, MapPin, Search } from "lucide-react";
 
 const Hero = () => {
   return (
-    <div className="pt-20 flex justify-start items-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 bg-[var(--color-background)] relative">
+    <div className="pt-20 flex justify-start items-end px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 min-h-screen bg-[url('/background/kitchen-white.png')] bg-cover bg-center relative">
       {/* Hero Content */}
-      <div className="z-10 pb-16 pt-16 flex flex-col w-full max-w-[610px] gap-6 sm:gap-8 md:gap-10">
+      <div className="z-10 pb-16 pt-16 sm:pt-48 md:pt-56 lg:pt-64 flex flex-col items-center w-full gap-5">
         {/* Headline */}
-        <h1 className="text-[var(--color-text)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[96px] leading-none font-poppins">
-          Easy Rentals, Peaceful Living
+        <h1 className="text-[var(--color-text)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-8xl text-center leading-none">
+          Easy Rentals <br /> Peaceful Living
         </h1>
+
         {/* Sub Headline */}
-        <p className="text-[var(--color-text)]/50 text-base sm:text-lg max-w-none sm:max-w-[500px] md:max-w-[550px]">
+        <p className="text-[var(--color-text)]/50 text-sm sm:text-base md:text-lg text-center sm:max-w-md md:max-w-lg lg:max-w-5xl px-2">
           Finding the right place to live shouldn't be stressful. With our
           platform, you can explore a wide range of properties — from modern
           apartments to spacious family homes — all designed to fit your
           lifestyle and budget.
         </p>
-        {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <Button
-            text="Login"
-            icon={ArrowRight}
-            variant="elevated"
-            to="/auth/login"
-          />
-          <Button
-            text="Create Account"
-            icon={ArrowRight}
-            variant="outline"
-            to="/auth/register"
-          />
+
+        {/* Filtering */}
+        <div className="flex flex-col items-center w-full">
+          {/* Button Filtering */}
+          <div className="flex gap-2 sm:gap-3 overflow-x-auto whitespace-nowrap justify-start sm:justify-center w-full px-2 scrollbar-hide pb-2">
+            <button className="p-2 sm:p-3 border border-[var(--color-border)] rounded-full inline-flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm flex-shrink-0">
+              <Building className="w-3 h-3 sm:w-4 sm:h-4" />
+              Condo
+            </button>
+            <button className="p-2 sm:p-3 border border-[var(--color-border)] rounded-full inline-flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm flex-shrink-0">
+              <Building2 className="w-3 h-3 sm:w-4 sm:h-4" />
+              Apartment
+            </button>
+            <button className="p-2 sm:p-3 border border-[var(--color-border)] rounded-full inline-flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm flex-shrink-0">
+              <Building className="w-3 h-3 sm:w-4 sm:h-4" />
+              Office
+            </button>
+            <button className="p-2 sm:p-3 border border-[var(--color-border)] rounded-full inline-flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm flex-shrink-0">
+              <Home className="w-3 h-3 sm:w-4 sm:h-4" />
+              House
+            </button>
+            <button className="p-2 sm:p-3 border border-[var(--color-border)] rounded-full inline-flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm flex-shrink-0">
+              <Building2 className="w-3 h-3 sm:w-4 sm:h-4" />
+              Penthouse
+            </button>
+          </div>
         </div>
-      </div>
-      {/* Hero Image */}
-      <div className="hidden md:block absolute right-0 top-0 w-1/2 lg:w-auto h-full">
-        <img
-          className="h-full w-auto object-cover object-left min-w-[500px] lg:min-w-[600px]"
-          src="./hero.png"
-          alt="Hero"
-        />
+
+        {/* Search Property */}
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl">
+          {/* Input Search */}
+          <div className="w-full flex items-center border border-[var(--color-border)] rounded-full pl-5">
+            <MapPin className="w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search by location"
+              aria-label="Search by location"
+              className="text-[var(--color-text)]/50 p-5 rounded-full focus:outline-none"
+            />
+          </div>
+
+          {/* Button Search */}
+          <button className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white rounded-full p-5 sm:p-5 flex items-center justify-center gap-2 hover:shadow-lg transition-shadow whitespace-nowrap text-sm sm:text-base flex-shrink-0">
+            <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden xs:inline sm:inline">Search Property</span>
+            <span className="inline xs:hidden sm:hidden">Search</span>
+          </button>
+        </div>
       </div>
     </div>
   );

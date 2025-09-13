@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-
+import Navbar from "@/components/organisms/Navbar";
+import Hero from "@/components/organisms/Hero";
+import Carousel from "@/components/organisms/Carousel";
+import Testimonial from "@/components/organisms/Testimonial";
+import FAQ from "@/components/organisms/FAQ";
+import Footer from "@/components/organisms/Footer";
+import SplashPage from "@/components/pages/SplashPage";
+import Service from "@/components/organisms/Service";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
@@ -13,15 +20,15 @@ const HomePage = () => {
   }, []);
 
   if (loading) {
-    return <Splash />;
+    return <SplashPage />;
   }
 
   return (
     <div className="font-poppins bg-[var(--color-background)]">
       <Navbar />
       <Hero />
-      <Slider />
-      {/* <Feature /> */}
+      <Carousel />
+      <Service />
       <Testimonial />
       <FAQ />
       <Footer />

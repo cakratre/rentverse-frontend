@@ -4,14 +4,14 @@ import NotFound from "@/components/pages/NotFound";
 // Guest
 import HomePage from "@/components/pages/HomePage";
 import LoginPage from "@/components/pages/LoginPage";
-import RegisterPage from "@/pages/RegisterPage";
+import RegisterPage from "@/components/pages/RegisterPage";
 
 // Tenant
-import TenantHomePage from "@/pages/TenantHomePage";
+import TenantHomePage from "@/components/pages/TenantHomePage";
 import TenantPropertyPage from "@/components/pages/TenantPropertyPage";
 import TenantDetailPropertyPage from "@/components/pages/TenantDetailPropertyPage";
 import TenantRentalAgreementPage from "@/components/pages/TenantRentalAgreementPage";
-import TenantDetailRentalAgreementPage from "@/pages/TenantDetailRentalAgreementPage";
+import TenantDetailRentalAgreementPage from "@/components/pages/TenantDetailRentalAgreementPage";
 import TenantProfilePage from "@/components/pages/TenantProfilePage";
 
 // Owner
@@ -20,13 +20,10 @@ import OwnerAddPropertyPage from "@/components/pages/OwnerAddPropertyPage";
 
 // Admin
 import AdminApprovalsPage from "@/components/pages/AdminApprovalsPage";
-import AdminDetailApprovalsPage from "@/pages/AdminDetailApprovalsPage";
-import AdminManageUserPage from "@/pages/AdminManageUserPage";
-import AdminDetailManageUserPage from "@/pages/AdminDetailManageUserPage";
+import AdminDetailApprovalsPage from "@/components/pages/AdminDetailApprovalsPage";
 import AdminProfilePage from "@/components/pages/AdminProfilePage";
 
 export const routes = [
-
   // Guest
   { path: "/", element: <HomePage /> },
   { path: "/auth/login", element: <LoginPage /> },
@@ -35,9 +32,12 @@ export const routes = [
   // Tenant
   { path: "/tenant", element: <TenantHomePage /> },
   { path: "/tenant/property", element: <TenantPropertyPage /> },
-  { path: "/tenant/property/id", element: <TenantDetailPropertyPage /> },
+  { path: "/tenant/property/:id", element: <TenantDetailPropertyPage /> },
   { path: "/tenant/rental-agreement", element: <TenantRentalAgreementPage /> },
-  { path: "/tenant/rental-agreement/id", element: <TenantDetailRentalAgreementPage /> },
+  {
+    path: "/tenant/rental-agreement/:id",
+    element: <TenantDetailRentalAgreementPage />,
+  },
   { path: "/tenant/profile", element: <TenantProfilePage /> },
 
   // Owner
@@ -45,10 +45,8 @@ export const routes = [
   { path: "/owner/property/add", element: <OwnerAddPropertyPage /> },
 
   // Admin
-  { path: "/admin", element: <AdminApprovalsPage /> },
-  { path: "/admin/approvals/id", element: <AdminDetailApprovalsPage /> },
-  { path: "/admin/manage-user", element: <AdminManageUserPage /> },
-  { path: "/admin/manage-user/id", element: <AdminDetailManageUserPage /> },
+  { path: "/admin/approvals", element: <AdminApprovalsPage /> },
+  { path: "/admin/approvals/:id", element: <AdminDetailApprovalsPage /> },
   { path: "/admin/profile", element: <AdminProfilePage /> },
 
   { path: "*", element: <NotFound /> },

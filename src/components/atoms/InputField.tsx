@@ -28,7 +28,7 @@ const InputField: React.FC<InputFieldProps> = ({
         {label}
       </label>
       {/* Input Container */}
-      <div className="flex items-center gap-3 border border-[var(--color-border)] pl-5 rounded-full">
+      <div className="flex items-center gap-3 border border-[var(--color-border)] pl-5 rounded-2xl">
         {icon && <span className="text-gray-500">{icon}</span>}
         <input
           id={id}

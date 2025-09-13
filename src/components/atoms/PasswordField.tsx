@@ -31,7 +31,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
         {label}
       </label>
       {/* Input Container */}
-      <div className="flex items-center gap-3 border border-[var(--color-border)] pl-5 rounded-full relative">
+      <div className="flex items-center gap-3 border border-[var(--color-border)] pl-5 rounded-2xl relative">
         <Lock className="text-gray-500" size={18} />
         <input
           id={id}

@@ -10,11 +10,12 @@ interface DecodedToken {
 
 export const verifyRole = (
   navigate: NavigateFunction,
-  allowedRoles: DecodedToken["role"][]
+  allowedRoles: DecodedToken["role"][],
 ) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
+    alert("Anda harus login terlebih dahulu.");
     navigate("/"); // gak ada token
     return;
   }
@@ -25,17 +26,20 @@ export const verifyRole = (
     // cek expired
     if (decoded.exp * 1000 < Date.now()) {
       localStorage.removeItem("token");
+      alert("Token Anda telah kadaluarsa. Silakan login kembali.");
       navigate("/");
       return;
     }
 
     // cek role
     if (!allowedRoles.includes(decoded.role)) {
-      navigate("/"); // role tidak diizinkan
+      alert("Anda tidak memiliki akses ke halaman ini.");
+      navigate("/");
     }
   } catch (err) {
     console.error("Token invalid:", err);
     localStorage.removeItem("token");
+    alert("Token invalid. Silakan login kembali.");
     navigate("/");
   }
 };

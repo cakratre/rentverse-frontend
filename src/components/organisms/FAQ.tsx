@@ -37,7 +37,7 @@ const FAQ = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
             Frequently Asked{" "}
             <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
-              Clients
+              Question
             </span>
           </h1>
           <p className="mt-4 text-black/50 text-sm sm:text-base leading-relaxed">

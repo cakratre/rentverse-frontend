@@ -2,7 +2,7 @@
 // import { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 // import { verifyRole } from "@/utils/verifyRole";
-import OwnerSidebar from "@/components/OwnerSidebar";
+// import OwnerSidebar from "@/components/OwnerSidebar";
 import { Link } from "react-router-dom";
 
 import {
@@ -168,7 +168,7 @@ const OwnerHomePage = () => {
 
   return (
     <div className="bg-[var(--color-background)]">
-      <OwnerSidebar />
+      {/*<OwnerSidebar />*/}
       <div className="pl-20 pt-5">
         <div className="pl-5">
           <h1 className="text-6xl">

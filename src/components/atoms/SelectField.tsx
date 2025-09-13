@@ -26,7 +26,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         {label}
       </label>
       {/* Select Container */}
-      <div className="flex items-center gap-3 border border-[var(--color-border)] px-5 rounded-full">
+      <div className="flex items-center gap-3 border border-[var(--color-border)] px-5 rounded-2xl">
         <select
           id={id}
           value={value}
