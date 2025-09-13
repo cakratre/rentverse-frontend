@@ -15,8 +15,11 @@ import TenantDetailRentalAgreementPage from "@/components/pages/TenantDetailRent
 import TenantProfilePage from "@/components/pages/TenantProfilePage";
 
 // Owner
-import OwnerHomePage from "@/components/pages/OwnerHomePage";
-import OwnerAddPropertyPage from "@/components/pages/OwnerAddPropertyPage";
+import OwnerPropertyPage from "@/components/pages/OwnerPropertyPage";
+import OwnerDetailPropertyPage from "@/components/pages/OwnerDetailPropertyPage";
+import OwnerCreatePropertyPage from "@/components/pages/OwnerCreatePropertyPage";
+import OwnerPredictPricePage from "@/components/pages/OwnerPredictPricePage";
+import OwnerProfilePage from "@/components/pages/OwnerProfilePage";
 
 // Admin
 import AdminApprovalsPage from "@/components/pages/AdminApprovalsPage";
@@ -41,8 +44,14 @@ export const routes = [
   { path: "/tenant/profile", element: <TenantProfilePage /> },
 
   // Owner
-  { path: "/owner", element: <OwnerHomePage /> },
-  { path: "/owner/property/add", element: <OwnerAddPropertyPage /> },
+  { path: "/owner/property", element: <OwnerPropertyPage /> },
+  { path: "/owner/property/:id", element: <OwnerDetailPropertyPage /> },
+  { path: "/owner/property/create", element: <OwnerCreatePropertyPage /> },
+  {
+    path: "/owner/property/create/predict",
+    element: <OwnerPredictPricePage />,
+  },
+  { path: "/owner/profile", element: <OwnerProfilePage /> },
 
   // Admin
   { path: "/admin/approvals", element: <AdminApprovalsPage /> },

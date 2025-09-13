@@ -50,19 +50,12 @@ const AdminApprovalsPage = () => {
       <div className="min-h-screen bg-[url('/background/blue-sky-whited.png')] bg-cover bg-center pt-20 px-6">
         {/* Header */}
         <div>
-          {/*<p className="text-xs p-3 text-black/50 border border-black/15 w-fit rounded-full">
-            Admin Dashboard
-          </p>*/}
           <h1 className="mb-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
             Admin{" "}
             <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
               Approvals
             </span>
           </h1>
-          {/*<p className="mt-4 text-black/50 text-sm sm:text-base leading-relaxed">
-            Discover what our partners and clients say about our rental property
-            services.
-          </p>*/}
         </div>
 
         {loading ? (

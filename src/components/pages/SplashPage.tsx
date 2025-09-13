@@ -1,3 +1,5 @@
+
+
 const SplashPage = () => {
     return (
         <div className="bg-[var(--color-background)] min-h-screen flex items-center justify-center">

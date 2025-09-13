@@ -31,7 +31,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
           id={id}
           value={value}
           onChange={onChange}
-          className="p-5 w-full bg-transparent outline-none focus:ring-0 rounded-full text-[var(--color-text)]/50"
+          className="p-5 w-full bg-transparent outline-none focus:ring-0 rounded-3xl text-[var(--color-text)]/50"
         >
           <option value="" disabled>
             {placeholder}

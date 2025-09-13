@@ -44,7 +44,7 @@ const ImageUploadPreview: React.FC<ImageUploadPreviewProps> = ({
         accept="image/*"
         multiple
         onChange={handleFileChange}
-        className="mb-2 p-5 border border-[var(--color-border)] w-full rounded-full"
+        className="mb-2 p-5 border border-[var(--color-border)] w-full rounded-2xl"
       />
       {/* Image Preview */}
       <div className="flex gap-2 flex-wrap">

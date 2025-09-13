@@ -46,7 +46,7 @@ const SizeInputField: React.FC<SizeInputFieldProps> = ({
         {label}
       </label>
       {/* Input Container */}
-      <div className="flex items-center border border-[var(--color-border)] rounded-full pl-5">
+      <div className="flex items-center border border-[var(--color-border)] rounded-2xl pl-5">
         <input
           type="number"
           id={id}

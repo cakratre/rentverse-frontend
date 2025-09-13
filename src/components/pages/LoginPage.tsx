@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import InputField from "@/components/atoms/InputField";
 import PasswordField from "@/components/atoms/PasswordField";
 import Footer from "@/components/organisms/Footer";
-import { useLoginStore } from "@/store/auth/loginStore";
+import { useLoginStore } from "@/store/auth/useLoginStore";
 
 interface DecodedToken {
   userId: string;
@@ -61,7 +61,7 @@ const LoginPage = () => {
         // Arahkan sesuai role
         switch (decoded.role) {
           case "Owner":
-            navigate("/owner");
+            navigate("/owner/property");
             break;
           case "Admin":
             navigate("/admin/approvals");

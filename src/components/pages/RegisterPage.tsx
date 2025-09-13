@@ -6,7 +6,7 @@ import InputField from "@/components/atoms/InputField";
 import SelectField from "@/components/atoms/SelectField";
 import PasswordField from "@/components/atoms/PasswordField";
 import Footer from "@/components/organisms/Footer";
-import { useRegisterStore } from "@/store/auth/registerStore";
+import { useRegisterStore } from "@/store/auth/useRegisterStore";
 
 const RegisterPage = () => {
   const {
