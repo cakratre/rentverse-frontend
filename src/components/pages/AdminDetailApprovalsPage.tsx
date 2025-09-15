@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { verifyRole } from "@/utils/verifyRole";
+import Topbar from "@/components/organisms/Topbar";
+import axios from "axios";
 import {
   getAdminPropertyById,
   updateAdminPropertyStatus,
 } from "@/services/admin.service";
-import Topbar from "@/components/organisms/Topbar";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL_API;
 
 interface PropertyImage {
   id: string;
@@ -63,19 +66,23 @@ const AdminDetailApprovalsPage = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [saving, setSaving] = useState(false);
 
+  //  Cek user role
   useEffect(() => {
     verifyRole(navigate, ["Admin"]);
   }, [navigate]);
 
+  // GET by ID
   useEffect(() => {
     if (!id) return;
 
     const fetchProperty = async () => {
       setLoading(true);
+
+      // GET Property by ID
       const res = await getAdminPropertyById(id);
       if (res.success) {
         setProperty(res.data);
-        setSelectedStatus(res.data.status); // set initial status
+        setSelectedStatus(res.data.status);
       } else {
         setErrorMsg(res.message || "Gagal mengambil property");
       }
@@ -85,10 +92,12 @@ const AdminDetailApprovalsPage = () => {
     fetchProperty();
   }, [id]);
 
+  // PUT
   const handleSave = async () => {
     if (!property) return;
     setSaving(true);
 
+    // PUT status Property by ID
     const res = await updateAdminPropertyStatus(property.id, selectedStatus);
     if (res.success) {
       alert("Status berhasil disimpan!");
@@ -129,7 +138,10 @@ const AdminDetailApprovalsPage = () => {
 
   return (
     <div>
+      {/* Navigation */}
       <Topbar routeHome="/admin/approvals" routeProfile="/admin/profile" />
+
+      {/* Main Content */}
       <div className="min-h-screen bg-[url('/background/blue-sky-whited.png')] bg-cover bg-center pt-20 pb-5 px-5">
         {/* Header */}
         <div className="mb-8">
@@ -179,19 +191,19 @@ const AdminDetailApprovalsPage = () => {
               Property Details
             </h3>
             <div className="space-y-2">
-              {/* <p className="text-base text-[var(--color-text)]/75">
-                <span className="text-[var(--color-text)]">ID:</span> {property.id}
-              </p> */}
               <p className="text-base text-[var(--color-text)]/75">
                 <span className="text-[var(--color-text)]">Property Type:</span>{" "}
                 {property.propertyType}
               </p>
               <p className="text-base text-[var(--color-text)]/75">
-                <span className="text-[var(--color-text)]">Number of Rooms:</span>{" "}
+                <span className="text-[var(--color-text)]">
+                  Number of Rooms:
+                </span>{" "}
                 {property.numberOfRooms}
               </p>
               <p className="text-base text-[var(--color-text)]/75">
-                <span className="text-[var(--color-text)]">Size:</span> {property.size} sqm
+                <span className="text-[var(--color-text)]">Size:</span>{" "}
+                {property.size} sqm
               </p>
               <p className="text-base text-[var(--color-text)]/75">
                 <span className="text-[var(--color-text)]">Price:</span> RM{" "}
@@ -202,7 +214,9 @@ const AdminDetailApprovalsPage = () => {
                 {property.furnished ? "Yes" : "No"}
               </p>
               <p className="text-base text-[var(--color-text)]/75">
-                <span className="text-[var(--color-text)]">Confidence Score:</span>{" "}
+                <span className="text-[var(--color-text)]">
+                  Confidence Score:
+                </span>{" "}
                 {property.confidenceScore}%
               </p>
             </div>
@@ -214,10 +228,6 @@ const AdminDetailApprovalsPage = () => {
               Owner Information
             </h3>
             <div className="space-y-2">
-              {/* <p className="text-base text-[var(--color-text)]/75">
-                <span className="text-[var(--color-text)]">Owner ID:</span>{" "}
-                {property.ownerId}
-              </p> */}
               <p className="text-base text-[var(--color-text)]/75">
                 <span className="text-[var(--color-text)]">Name:</span>{" "}
                 {property.owner.name}
@@ -267,10 +277,6 @@ const AdminDetailApprovalsPage = () => {
                 <span className="text-[var(--color-text)]">Coordinates:</span>{" "}
                 {property.address.lat}, {property.address.lon}
               </p>
-              {/* <p className="text-base text-[var(--color-text)]/75">
-                <span className="text-[var(--color-text)]">Address ID:</span>{" "}
-                {property.address.id}
-              </p> */}
             </div>
           </div>
         </div>
@@ -291,17 +297,46 @@ const AdminDetailApprovalsPage = () => {
             Ownership Certificate
           </h3>
           <div className="space-y-2">
-            <p className="text-base text-[var(--color-text)]/75">
-              <span className="text-[var(--color-text)]">Certificate URL:</span>{" "}
-              <a
-                href={property.ownershipCertificateUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent ml-2 underline"
-              >
-                View Certificate
-              </a>
-            </p>
+            <button
+              onClick={async () => {
+                try {
+                  const token = localStorage.getItem("token");
+                  if (!token) {
+                    alert("Token tidak ditemukan");
+                    return;
+                  }
+
+                  const res = await axios.get(
+                    `${BASE_URL}/admin/property/${property.id}/certificate`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                      responseType: "blob",
+                    },
+                  );
+
+                  const blobUrl = URL.createObjectURL(res.data);
+                  window.open(blobUrl, "_blank");
+                } catch (error: unknown) {
+                  console.error(error);
+                  const errorMessage =
+                    error instanceof Error
+                      ? error.message
+                      : (
+                          error as {
+                            response?: { data?: { message?: string } };
+                          }
+                        )?.response?.data?.message ||
+                        "Gagal membuka certificate";
+                  alert(errorMessage);
+                }
+              }}
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-medium shadow hover:opacity-90 transition"
+            >
+              View Certificate
+            </button>
+
             <p className="text-base text-[var(--color-text)]/75">
               <span className="text-[var(--color-text)]">Certificate IV:</span>{" "}
               {property.ownershipCertificateIv}
@@ -339,7 +374,9 @@ const AdminDetailApprovalsPage = () => {
                   alt="Property"
                   className="w-full h-48 object-cover rounded-lg border border-[var(--color-border)]"
                 />
-                <p className="text-xs text-[var(--color-text)]/50">ID: {img.id}</p>
+                <p className="text-xs text-[var(--color-text)]/50">
+                  ID: {img.id}
+                </p>
               </div>
             ))}
           </div>

@@ -27,7 +27,7 @@ const AdminApprovalsPage = () => {
   useEffect(() => {
     verifyRole(navigate, ["Admin"]);
     fetchProperties();
-  }, []);
+  }, [navigate]);
 
   const fetchProperties = async () => {
     setLoading(true);
