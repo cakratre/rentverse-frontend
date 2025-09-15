@@ -332,7 +332,7 @@ const AdminDetailApprovalsPage = () => {
                   alert(errorMessage);
                 }
               }}
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-medium shadow hover:opacity-90 transition"
+              className="px-4 py-2 rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-medium hover:opacity-90 transition"
             >
               View Certificate
             </button>
