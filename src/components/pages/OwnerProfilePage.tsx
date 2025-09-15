@@ -46,7 +46,7 @@ const OwnerProfilePage = () => {
 
   return (
     <div>
-      <Topbar routeHome="/tenant" routeProfile="/tenant/profile" />
+      <Topbar routeHome="/owner/property" routeProfile="/owner/profile" />
       <div className="min-h-screen bg-[url('/background/blue-sky-whited.png')] bg-cover bg-center flex justify-center items-center">
         {loading ? (
           <p className="text-white text-lg">Loading...</p>

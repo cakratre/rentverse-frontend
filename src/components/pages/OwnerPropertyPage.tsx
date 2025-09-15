@@ -1,185 +1,219 @@
 import { Link } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import Footer from "@/components/organisms/Footer";
+import Topbar from "@/components/organisms/Topbar";
+import { getOwnerProperty } from "@/services/owner.service";
 import {
-  MapPin,
   Home,
-  Building,
-  Store,
-  LandPlot,
+  DoorOpen,
+  Sofa,
   Ruler,
-  Eye,
+  DollarSign,
+  Info,
+  MapPin,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 
+interface PropertyImage {
+  id: string;
+  url: string;
+  propertyId: string;
+}
+
+interface PropertyOwner {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface PropertyAddress {
+  id: string;
+  lat: number;
+  lon: number;
+  streetName: string;
+  buildingName: string;
+  area: string;
+  town: string;
+  state: string;
+  country: string;
+}
+
 interface Property {
-  propertyName: string;
-  address: string;
-  type: string;
-  size: string;
-  price: string;
+  id: string;
+  name: string;
+  addressId: string;
+  propertyType: string;
+  numberOfRooms: number;
+  furnished: boolean;
+  size: number;
+  price: number;
   description: string;
-  imageUpload: string;
+  confidenceScore: number;
+  status: string;
+  ownershipCertificateUrl: string;
+  ownershipCertificateIv: string;
+  ownerId: string;
+  createdAt: string;
+  updatedAt: string;
+  images: PropertyImage[];
+  owner: PropertyOwner;
+  address: PropertyAddress;
 }
-
-interface PropertyCardProps {
-  property: Property;
-}
-
-const properties: Property[] = [
-  {
-    propertyName: "Rumah Mewah di Sleman",
-    address: "Jl. Kaliurang KM 10, Sleman, Yogyakarta",
-    type: "Rumah",
-    size: "250 m²",
-    price: "Rp 2.500.000.000",
-    description:
-      "Rumah modern minimalis dengan 4 kamar tidur, 3 kamar mandi, garasi luas, dan halaman belakang yang nyaman.",
-    imageUpload:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YXBhcnRtZW50fGVufDB8fDB8fHww",
-  },
-  {
-    propertyName: "Apartemen Premium Malioboro",
-    address: "Jl. Malioboro No. 20, Yogyakarta",
-    type: "Apartemen",
-    size: "85 m²",
-    price: "Rp 950.000.000",
-    description:
-      "Apartemen fully furnished dengan akses langsung ke pusat kota, cocok untuk investasi maupun hunian.",
-    imageUpload:
-      "https://plus.unsplash.com/premium_photo-1680281937008-f9b19ed9afb6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGFwYXJ0bWVudHxlbnwwfHwwfHx8MA%3D%3D",
-  },
-  {
-    propertyName: "Ruko Strategis Condongcatur",
-    address: "Jl. Raya Condongcatur, Sleman, Yogyakarta",
-    type: "Ruko",
-    size: "120 m²",
-    price: "Rp 1.200.000.000",
-    description:
-      "Ruko 2 lantai dengan lokasi strategis dekat kampus, cocok untuk usaha atau investasi properti komersial.",
-    imageUpload:
-      "https://images.unsplash.com/photo-1515263487990-61b07816b324?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBhcnRtZW50fGVufDB8fDB8fHww",
-  },
-  {
-    propertyName: "Tanah Kavling Dekat Bandara YIA",
-    address: "Jl. Wates, Kulon Progo, Yogyakarta",
-    type: "Tanah",
-    size: "300 m²",
-    price: "Rp 450.000.000",
-    description:
-      "Tanah kavling siap bangun dengan akses jalan utama, hanya 15 menit dari Bandara YIA.",
-    imageUpload:
-      "https://plus.unsplash.com/premium_photo-1680281937008-f9b19ed9afb6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGFwYXJ0bWVudHxlbnwwfHwwfHx8MA%3D%3D",
-  },
-];
-
-const getPropertyIcon = (type: string) => {
-  switch (type.toLowerCase()) {
-    case "rumah":
-      return <Home className="w-4 h-4" />;
-    case "apartemen":
-      return <Building className="w-4 h-4" />;
-    case "ruko":
-      return <Store className="w-4 h-4" />;
-    case "tanah":
-      return <LandPlot className="w-4 h-4" />;
-    default:
-      return <Home className="w-4 h-4" />;
-  }
-};
-
-const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  return (
-    <div className="bg-[#EEEEEE] rounded-3xl overflow-hidden border border-black/15 hover:shadow-md transition-shadow duration-300">
-      <div className="relative">
-        <img
-          src={property.imageUpload}
-          alt={property.propertyName}
-          className="w-full h-64 object-cover"
-        />
-        <div className="absolute top-4 left-4">
-          <span className="bg-white px-4 py-2 rounded-full text-base font-medium text-gray-700 flex items-center gap-2">
-            {getPropertyIcon(property.type)}
-            {property.type}
-          </span>
-        </div>
-      </div>
-
-      <div className="p-6">
-        <h3 className="font-semibold text-xl text-gray-900 mb-3 leading-tight">
-          {property.propertyName}
-        </h3>
-
-        <div className="text-gray-600 text-base mb-4 flex items-start">
-          <MapPin className="w-5 h-5 mt-0.5 mr-2 text-gray-400 flex-shrink-0" />
-          <span>{property.address}</span>
-        </div>
-
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 text-base text-gray-600">
-            <Ruler className="w-5 h-5 text-gray-400" />
-            <span>{property.size}</span>
-          </div>
-          <span className="font-bold text-xl" style={{ color: "#171717" }}>
-            {property.price}
-          </span>
-        </div>
-
-        <p className="text-gray-600 text-base mb-6 line-clamp-3">
-          {property.description}
-        </p>
-
-        <button
-          className="w-full p-5 rounded-full text-white font-medium transition-colors duration-200 hover:opacity-90 flex items-center justify-center gap-2"
-          style={{ backgroundColor: "#171717" }}
-        >
-          <Eye className="w-5 h-5" />
-          Lihat Detail
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const OwnerPropertyList: React.FC = () => {
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: "#EEEEEE" }}>
-      <div className="container px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {properties.map((property, index) => (
-            <PropertyCard key={index} property={property} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const OwnerPropertyPage = () => {
-  // const navigate = useNavigate();
+  const [properties, setProperties] = useState<Property[]>([]);
 
-  // useEffect(() => {
-  //     verifyRole(navigate, ["Owner"]);
-  // }, [navigate]);
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const res = await getOwnerProperty();
+      if (res.success) {
+        setProperties(res.data);
+      } else {
+        console.error(res.message);
+      }
+    };
+
+    fetchProperties();
+  }, []);
 
   return (
-    <div className="bg-[var(--color-background)]">
-      {/*<OwnerSidebar />*/}
-      <div className="pl-20 pt-5">
+    <div className="bg-[var(--color-background)] min-h-screen">
+      <Topbar routeHome="/owner/property" routeProfile="/owner/profile" />
+
+      {/* Header */}
+      <div className="pl-20 pt-20">
         <div className="pl-5">
-          <h1 className="text-6xl">
+          <h1 className="text-6xl mb-10">
             HI! <span>Yogawan</span>. Welcome to your <br /> owner Dashboard
           </h1>
-          <div className="pt-10">
+          <div className="pt-5">
             <Link
-              className="p-5 bg-black text-white rounded-full"
-              to="/owner/property/add"
+              className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white px-8 py-4 rounded-full text-lg"
+              to="/owner/property/create"
             >
-              List New Peoperty
+              List New Property
             </Link>
           </div>
         </div>
-
-        <OwnerPropertyList />
       </div>
+
+      {/* List Owner Property */}
+      <div className="px-20 pt-20 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {properties.map((property) => (
+            <div
+              key={property.id}
+              className="border border-black/15 rounded-3xl p-6 flex flex-col gap-4 h-fit"
+            >
+              {/* Property Image */}
+              <div className="mb-4">
+                {property.images.length > 0 && (
+                  <img
+                    src={property.images[0].url}
+                    alt={`${property.name}`}
+                    className="w-full h-48 object-cover rounded-2xl"
+                  />
+                )}
+              </div>
+
+              {/* Property Name */}
+              <h2 className="text-xl mb-3">{property.name}</h2>
+
+              {/* Property Details */}
+              <div className="space-y-3">
+                <p className="flex items-center gap-3 text-base">
+                  <Home size={18} className="text-[var(--color-primary)]" />
+                  <span>Type:</span> {property.propertyType}
+                </p>
+                <p className="flex items-center gap-3 text-base">
+                  <DoorOpen size={18} className="text-[var(--color-primary)]" />
+                  <span>Rooms:</span> {property.numberOfRooms}
+                </p>
+                <p className="flex items-center gap-3 text-base">
+                  <Sofa size={18} className="text-[var(--color-primary)]" />
+                  <span>Furnished:</span> {property.furnished ? "Yes" : "No"}
+                </p>
+                <p className="flex items-center gap-3 text-base">
+                  <Ruler size={18} className="text-[var(--color-primary)]" />
+                  <span>Size:</span> {property.size} M²
+                </p>
+                <p className="flex items-center gap-3 text-base">
+                  <DollarSign size={18} className="text-[var(--color-primary)]" />
+                  <span>Price:</span> {property.price} MYR
+                </p>
+                <p className="flex items-center gap-3 text-base">
+                  <CheckCircle size={18} className="text-[var(--color-primary)]" />
+                  <span>Score:</span> {property.confidenceScore}
+                </p>
+                <p className="flex items-center gap-3 text-base">
+                  {property.status === "Available" ? (
+                    <CheckCircle size={18} className="text-green-500" />
+                  ) : (
+                    <XCircle size={18} className="text-red-500" />
+                  )}
+                  <span>Status:</span> {property.status}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="py-2">
+                <p className="flex items-start gap-3 text-base text-gray-600 leading-relaxed">
+                  <Info size={18} className="text-[var(--color-primary)] mt-0.5 flex-shrink-0" />
+                  {property.description.length > 100
+                    ? `${property.description.substring(0, 100)}...`
+                    : property.description}
+                </p>
+              </div>
+
+              {/* Address */}
+              <div className="border-t border-black/10 pt-4">
+                <div className="flex items-start gap-3 text-base">
+                  <MapPin size={18} className="text-[var(--color-primary)] mt-0.5 flex-shrink-0" />
+                  <div className="text-sm text-gray-600 leading-relaxed">
+                    <p>
+                      {property.address.area}, {property.address.town}
+                    </p>
+                    <p>
+                      {property.address.state}, {property.address.country}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <div className="mt-4 pt-2">
+                <div className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-4 rounded-full text-center">
+                  <Link
+                    className="block text-base"
+                    to={`/owner/property/${property.id}`}
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {properties.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-xl text-gray-500 mb-6">
+              No properties listed yet
+            </p>
+            <Link
+              className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white px-8 py-4 rounded-full text-lg"
+              to="/owner/property/create"
+            >
+              List Your First Property
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

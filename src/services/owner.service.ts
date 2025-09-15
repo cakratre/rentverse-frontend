@@ -1,0 +1,109 @@
+import axios from "axios";
+
+const BASE_URL = "http://localhost:3000/api";
+
+// GET all properties
+export const getOwnerProperty = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return { success: false, message: "Token tidak ditemukan" };
+    }
+
+    const res = await axios.get(`${BASE_URL}/owner/properties`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { success: false, message: error.message };
+    }
+  }
+};
+
+// GET property by ID
+export const getOwnerPropertyById = async (id: string) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return { success: false, message: "Token tidak ditemukan" };
+    }
+
+    const res = await axios.get(`${BASE_URL}/owner/property/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { success: false, message: error.message };
+    }
+  }
+};
+
+// POST new property
+export const createOwnerProperty = async (data: FormData) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return { success: false, message: "Token tidak ditemukan" };
+
+    console.log("Sending request to:", `${BASE_URL}/owner/property`);
+    console.log("Token present:", !!token);
+
+    const res = await axios.post(`${BASE_URL}/owner/property`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error("API Error Details:", error);
+    if (error.response) {
+      console.error("Response Status:", error.response.status);
+      console.error("Response Data:", error.response.data);
+      console.error("Response Headers:", error.response.headers);
+      return error.response.data;
+    } else if (error.request) {
+      console.error("Request Error:", error.request);
+      return { success: false, message: "Network error - no response received" };
+    } else {
+      console.error("Error Message:", error.message);
+      return { success: false, message: error.message };
+    }
+  }
+};
+
+// PUT / Update property by ID
+export const updateOwnerProperty = async (id: string, data: any) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return { success: false, message: "Token tidak ditemukan" };
+
+    const res = await axios.put(`${BASE_URL}/owner/property/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { success: false, message: error.message };
+    }
+  }
+};

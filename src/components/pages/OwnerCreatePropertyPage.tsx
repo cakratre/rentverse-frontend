@@ -6,13 +6,23 @@ import NumberInputField from "@/components/atoms/NumberInputField";
 import SizeInputField from "@/components/atoms/SizeInputField";
 import ImageUploadPreview from "@/components/atoms/ImageUploadPreview";
 import PdfUploadPreview from "@/components/atoms/PdfUploadPreview";
-import { usePropertyStore } from "@/store/usePropertyStore";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { User, MapPin } from "lucide-react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { createOwnerProperty } from "@/services/owner.service";
+
+interface Address {
+  lat: number;
+  lon: number;
+  streetName: string;
+  buildingName: string;
+  area: string;
+  areatown: string;
+  state: string;
+  country: string;
+}
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -47,112 +57,148 @@ const LocationMarker = ({ position, onLocationSelect }: LocationMarkerProps) => 
 };
 
 const OwnerCreatePropertyPage = () => {
-  const {
-    name,
-    description,
-    propertyType,
-    numberOfRoom,
-    size,
-    furnished,
-    image,
-    address,
-    ownershipCertificate,
-    mapPosition,
-    isLoadingAddress,
-    setName,
-    setDescription,
-    setPropertyType,
-    setNumberOfRoom,
-    setSize,
-    setFurnished,
-    setImage,
-    setAddress,
-    setOwnershipCertificate,
-    setMapPosition,
-    setIsLoadingAddress,
-  } = usePropertyStore();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [propertyType, setPropertyType] = useState("");
+  const [numberOfRoom, setNumberOfRoom] = useState(0);
+  const [size, setSize] = useState(0);
+  const [furnished, setFurnished] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [ownershipCertificate, setOwnershipCertificate] = useState<File | null>(null);
 
-  const navigate = useNavigate();
+  const [address, setAddress] = useState<Address>({
+    lat: 5.4164,
+    lon: 100.3327,
+    streetName: "",
+    buildingName: "",
+    area: "",
+    areatown: "",
+    state: "",
+    country: "",
+  });
+
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  // Validation
+  if (!name || !description || !propertyType || !numberOfRoom || !size || !image || !ownershipCertificate) {
+    alert("Please fill in all required fields");
+    return;
+  }
+
+  if (!address.lat || !address.lon || !address.streetName || !address.area || !address.state || !address.country) {
+    alert("Please complete the address information");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+
+    // Add property details
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("propertyType", propertyType);
+    formData.append("numberOfRooms", numberOfRoom.toString()); // Changed from numberOfRoom to numberOfRooms
+    formData.append("size", size.toString());
+    formData.append("furnished", furnished.toString());
+
+    // Add address data
+    const addressData = {
+      streetName: address.streetName,
+      buildingName: address.buildingName || "",
+      area: address.area,
+      town: address.areatown || address.area,
+      state: address.state,
+      country: address.country,
+      lat: address.lat,
+      lon: address.lon,
+    };
+    formData.append("address", JSON.stringify(addressData));
+
+    // Add image
+    if (image) {
+      formData.append("images", image);
+    }
+
+    // Add ownership certificate
+    if (ownershipCertificate) {
+      formData.append("ownershipCertificate", ownershipCertificate);
+    }
+
+    // Log FormData contents for debugging
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    // Call API
+    const result = await createOwnerProperty(formData);
+    console.log("API Response:", result);
+    
+    if (result.success) {
+      alert("Property created successfully!");
+      // redirect kalau mau
+      // navigate("/owner/property");
+    } else {
+      console.error("API Error:", result);
+      alert(result.message || "Failed to create property");
+    }
+  } catch (error) {
+    console.error("Error creating property:", error);
+    alert("An error occurred while creating the property");
+  }
+};
+
+
+  const [mapPosition, setMapPosition] = useState<[number, number]>([5.4164, 100.3327]);
+  const [isLoadingAddress, setIsLoadingAddress] = useState(false);
 
   const reverseGeocode = async (lat: number, lon: number) => {
     setIsLoadingAddress(true);
     try {
-      // Try multiple APIs as fallback
-      const apis = [
-        // Primary: Nominatim with CORS proxy
-        `https://api.allorigins.win/get?url=${encodeURIComponent(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`)}`,
-        // Fallback: Another geocoding service
+      // Use BigDataCloud API as primary (free and reliable)
+      const response = await fetch(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`,
-      ];
+      );
 
-      let addressData = null;
-
-      // Try first API (Nominatim with proxy)
-      try {
-        const response = await fetch(apis[0]);
-        const proxyData = await response.json();
-        const data = JSON.parse(proxyData.contents);
-
-        if (data && data.address) {
-          const addr = data.address;
-          addressData = {
-            streetName: addr.road || addr.pedestrian || "",
-            buildingName: addr.house_number
-              ? `${addr.house_number} ${addr.road || ""}`
-              : "",
-            area: addr.city || addr.town || addr.village || "",
-            areatown: addr.suburb || addr.neighbourhood || "",
-            state: addr.state || addr.province || "",
-            country: addr.country || "",
-          };
-        }
-      } catch {
-        console.log("Primary API failed, trying fallback...");
+      if (!response.ok) {
+        throw new Error("Geocoding service unavailable");
       }
 
-      // Try fallback API if primary failed
-      if (!addressData) {
-        try {
-          const response = await fetch(apis[1]);
-          const data = await response.json();
+      const data = await response.json();
 
-          if (data) {
-            addressData = {
-              streetName: data.locality || "",
-              buildingName: "",
-              area: data.city || "",
-              areatown: data.principalSubdivision || "",
-              state: data.principalSubdivision || "",
-              country: data.countryName || "",
-            };
-          }
-        } catch {
-          console.log("Fallback API also failed");
-        }
-      }
+      if (data) {
+        const addressData = {
+          streetName: data.locality || data.city || "",
+          buildingName: "",
+          area: data.city || data.locality || "",
+          areatown: data.principalSubdivision || "",
+          state: data.principalSubdivision || "",
+          country: data.countryName || "",
+        };
 
-      // Update address if we got data from any API
-      if (addressData) {
         setAddress({
           lat,
           lon,
           ...addressData,
         });
       } else {
-        // If all APIs fail, just update coordinates
-        setAddress({
+        // If geocoding fails, just update coordinates
+        setAddress((prev) => ({
+          ...prev,
           lat,
           lon,
-        });
-        alert("Address lookup failed. Please enter address details manually.");
+        }));
+        alert("Could not fetch address details. Please enter manually.");
       }
     } catch (error) {
       console.error("Error fetching address:", error);
       // Update coordinates even if geocoding fails
-      setAddress({
+      setAddress((prev) => ({
+        ...prev,
         lat,
         lon,
-      });
+      }));
       alert("Address lookup failed. Please enter address details manually.");
     } finally {
       setIsLoadingAddress(false);
@@ -181,22 +227,6 @@ const OwnerCreatePropertyPage = () => {
     } else {
       alert("Geolocation is not supported by this browser.");
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log({
-      name,
-      description,
-      propertyType,
-      numberOfRoom,
-      size,
-      image,
-      ownershipCertificate,
-      furnished,
-      address,
-    });
-    navigate("/owner/property/create/predict");
   };
 
   return (
@@ -464,7 +494,7 @@ const OwnerCreatePropertyPage = () => {
               className="mt-5 p-5 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white w-full rounded-full hover:opacity-90 transition-opacity"
               type="submit"
             >
-              Predict Price
+              Create Property
             </button>
           </div>
         </div>
