@@ -13,7 +13,7 @@ export interface PropertyFilters {
   limit?: number;
 }
 
-// GET all properties with optional filters
+// GET All
 export const getTenantProperty = async (filters?: PropertyFilters) => {
   try {
     const token = localStorage.getItem("token");
@@ -26,14 +26,14 @@ export const getTenantProperty = async (filters?: PropertyFilters) => {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== "") {
           params.append(key, value.toString());
         }
       });
     }
 
-    const url = `${BASE_URL}/tenant/properties${params.toString() ? `?${params.toString()}` : ''}`;
-    
+    const url = `${BASE_URL}/tenant/properties${params.toString() ? `?${params.toString()}` : ""}`;
+
     const res = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -41,16 +41,20 @@ export const getTenantProperty = async (filters?: PropertyFilters) => {
     });
 
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {
-      return { success: false, message: error.message };
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
     }
   }
 };
 
-// GET property by ID
+// GET by ID
 export const getTenantPropertyById = async (id: string) => {
   try {
     const token = localStorage.getItem("token");
@@ -66,11 +70,15 @@ export const getTenantPropertyById = async (id: string) => {
     });
 
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {
-      return { success: false, message: error.message };
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
     }
   }
 };

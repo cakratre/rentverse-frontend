@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = import.meta.env.VITE_BASE_URL_API;
 
 // GET all properties
 export const getOwnerProperty = async () => {
@@ -18,11 +18,15 @@ export const getOwnerProperty = async () => {
     });
 
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {
-      return { success: false, message: error.message };
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
     }
   }
 };
@@ -43,11 +47,15 @@ export const getOwnerPropertyById = async (id: string) => {
     });
 
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {
-      return { success: false, message: error.message };
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
     }
   }
 };
@@ -78,7 +86,10 @@ export const createOwnerProperty = async (data: FormData) => {
       return error.response.data;
     } else if (error.request) {
       console.error("Request Error:", error.request);
-      return { success: false, message: "Network error - no response received" };
+      return {
+        success: false,
+        message: "Network error - no response received",
+      };
     } else {
       console.error("Error Message:", error.message);
       return { success: false, message: error.message };
@@ -99,11 +110,15 @@ export const updateOwnerProperty = async (id: string, data: any) => {
     });
 
     return res.data;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {
-      return { success: false, message: error.message };
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
     }
   }
 };
