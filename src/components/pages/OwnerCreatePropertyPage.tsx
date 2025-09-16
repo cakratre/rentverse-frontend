@@ -1,6 +1,7 @@
 // src/pages/OwnerCreatePropertyPage.tsx
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Address {
   lat: number;
@@ -28,10 +29,12 @@ const OwnerCreatePropertyPage = () => {
   const [furnished, setFurnished] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [ownershipCertificate, setOwnershipCertificate] = useState<File | null>(
-    null
+    null,
   );
   const [showModal, setShowModal] = useState(false);
-  const [propertyResponse, setPropertyResponse] = useState<PropertyResponse | null>(null);
+  const [propertyResponse, setPropertyResponse] =
+    useState<PropertyResponse | null>(null);
+  const navigate = useNavigate();
 
   const [address, setAddress] = useState<Address>({
     lat: 5.4164,
@@ -94,19 +97,18 @@ const OwnerCreatePropertyPage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       console.log("Success:", res.data);
-      
+
       // Set response data and show modal
       setPropertyResponse({
         price: res.data.data.price,
         confidenceScore: res.data.data.confidenceScore,
-        name: res.data.data.name
+        name: res.data.data.name,
       });
       setShowModal(true);
-      
     } catch (error: any) {
       console.error("Error:", error.response?.data || error.message);
       alert("Gagal membuat property");
@@ -116,6 +118,7 @@ const OwnerCreatePropertyPage = () => {
   const closeModal = () => {
     setShowModal(false);
     setPropertyResponse(null);
+    navigate("/owner/property");
   };
 
   return (
@@ -145,7 +148,7 @@ const OwnerCreatePropertyPage = () => {
             value={propertyType}
             onChange={(e) => setPropertyType(e.target.value)}
           >
-            <option value="">-- pilih --</option>
+            <option value="">Choose your property type</option>
             <option value="Condo">Condo</option>
             <option value="Penthouse">Penthouse</option>
             <option value="Apartment">Apartment</option>
@@ -181,6 +184,7 @@ const OwnerCreatePropertyPage = () => {
           />
         </div>
 
+        {/* Image Upload */}
         <div>
           <label>Images:</label>
           <input
@@ -193,6 +197,29 @@ const OwnerCreatePropertyPage = () => {
               }
             }}
           />
+
+          {/* Image Preview */}
+          {images.length > 0 && (
+            <div className="mt-4">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Preview Images:
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {images.map((file, idx) => (
+                  <div key={idx} className="relative">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`Preview ${idx + 1}`}
+                      className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                    />
+                    <p className="text-xs text-gray-500 mt-1 truncate">
+                      {file.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
@@ -270,46 +297,57 @@ const OwnerCreatePropertyPage = () => {
           </div>
         </fieldset>
 
-        <button type="submit">Submit</button>
+        <button
+          className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-5 rounded-full w-full"
+          type="submit"
+        >
+          Prediksi Harga
+        </button>
       </form>
-
-      {images.length > 0 && (
-        <div>
-          <h4>Preview Images:</h4>
-          {images.map((file, idx) => (
-            <p key={idx}>{file.name}</p>
-          ))}
-        </div>
-      )}
 
       {/* Modal */}
       {showModal && propertyResponse && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+        <div className="fixed inset-0 bg-transparent backdrop-blur bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white border border-[var(--color-border)] rounded-4xl p-6 max-w-md w-full mx-4">
             <div className="text-center">
               <div className="mb-4">
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                  <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  <svg
+                    className="h-6 w-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    ></path>
                   </svg>
                 </div>
               </div>
-              
+
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 Property Created Successfully!
               </h3>
-              
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h4 className="font-semibold text-gray-800 mb-3">{propertyResponse.name}</h4>
-                
+
+              <div className="bg-white rounded-3xl p-4 mb-6">
+                <h4 className="font-semibold text-gray-800 mb-3">
+                  {propertyResponse.name}
+                </h4>
+
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Estimated Price:</span>
                     <span className="font-semibold text-green-600 text-lg">
-                      ${propertyResponse.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      $
+                      {propertyResponse.price.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                      })}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Confidence Score:</span>
                     <div className="flex items-center">
@@ -317,19 +355,21 @@ const OwnerCreatePropertyPage = () => {
                         {propertyResponse.confidenceScore.toFixed(1)}%
                       </span>
                       <div className="w-16 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
-                          style={{ width: `${propertyResponse.confidenceScore}%` }}
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{
+                            width: `${propertyResponse.confidenceScore}%`,
+                          }}
                         ></div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <button
                 onClick={closeModal}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                className="w-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white font-normal p-5 rounded-full"
               >
                 Close
               </button>
