@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { getOwnerPropertyById } from "@/services/owner.service";
 import Footer from "@/components/organisms/Footer";
 import Topbar from "@/components/organisms/Topbar";
+import { deleteOwnerProperty } from "@/services/owner.service";
+import { Icon } from "@iconify/react";
 import {
   Home,
   DoorOpen,
@@ -16,6 +18,7 @@ import {
   ArrowLeft,
   Star,
 } from "lucide-react";
+import { verifyRole } from "@/utils/verifyRole";
 
 type PropertyType = {
   id: string;
@@ -46,7 +49,13 @@ const OwnerDetailPropertyPage = () => {
   const [property, setProperty] = useState<PropertyType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    verifyRole(navigate, ["Owner"]);
+  }, [navigate]);
+
+  // Handle GET by ID
   useEffect(() => {
     const fetchProperty = async () => {
       if (!id) return;
@@ -57,7 +66,7 @@ const OwnerDetailPropertyPage = () => {
       if (res.success === false) {
         setError(res.message || "Failed to fetch property");
       } else {
-        setProperty(res.data); // asumsi API return data di field 'data'
+        setProperty(res.data);
       }
       setLoading(false);
     };
@@ -65,12 +74,31 @@ const OwnerDetailPropertyPage = () => {
     fetchProperty();
   }, [id]);
 
+  // Handle DELETE by ID
+  const handleDeleteProperty = async () => {
+    if (!id) return;
+
+    const confirmDelete = window.confirm("Yakin mau hapus property ini?");
+    if (!confirmDelete) return;
+
+    const result = await deleteOwnerProperty(id);
+
+    if (result.success !== false) {
+      alert("Property berhasil dihapus");
+      navigate("/owner/property");
+    } else {
+      alert(result.message || "Gagal menghapus property");
+    }
+  };
+
   if (loading)
     return (
       <div className="bg-[var(--color-background)] min-h-screen">
         <Topbar routeHome="/owner/property" routeProfile="/owner/profile" />
-        <div className="flex items-center justify-center h-screen">
-          <p className="text-xl">Loading...</p>
+        <div className="min-h-screen flex justify-center items-center bg-[var(--color-background)]">
+          <div className="text-center text-[var(--color-text)]">
+            <Icon icon="eos-icons:loading" width="64" height="64" />
+          </div>
         </div>
       </div>
     );
@@ -95,18 +123,19 @@ const OwnerDetailPropertyPage = () => {
 
   return (
     <div className="bg-[var(--color-background)] min-h-screen">
+      {/* Navigation */}
       <Topbar routeHome="/owner/property" routeProfile="/owner/profile" />
 
       {/* Header */}
-      <div className="pl-20 pt-20">
+      <div className="pl-20 pt-32">
         <div className="pl-5">
           <div className="flex items-center gap-4 mb-6">
             <Link
               to="/owner/property"
-              className="flex items-center gap-2 text-[var(--color-primary)] hover:opacity-80"
+              className="flex items-center gap-2 text-[var(--color-text)] hover:opacity-80"
             >
               <ArrowLeft size={20} />
-              Back to Properties
+              Back to list property
             </Link>
           </div>
           <h1 className="text-6xl mb-4">{property.name}</h1>
@@ -142,7 +171,10 @@ const OwnerDetailPropertyPage = () => {
                     <span>Type:</span> {property.propertyType}
                   </p>
                   <p className="flex items-center gap-3 text-lg">
-                    <DoorOpen size={20} className="text-[var(--color-primary)]" />
+                    <DoorOpen
+                      size={20}
+                      className="text-[var(--color-primary)]"
+                    />
                     <span>Rooms:</span> {property.numberOfRooms}
                   </p>
                   <p className="flex items-center gap-3 text-lg">
@@ -154,7 +186,10 @@ const OwnerDetailPropertyPage = () => {
                     <span>Size:</span> {property.size} M²
                   </p>
                   <p className="flex items-center gap-3 text-lg">
-                    <DollarSign size={20} className="text-[var(--color-primary)]" />
+                    <DollarSign
+                      size={20}
+                      className="text-[var(--color-primary)]"
+                    />
                     <span>Price:</span> {property.price} MYR
                   </p>
                   <p className="flex items-center gap-3 text-lg">
@@ -176,7 +211,10 @@ const OwnerDetailPropertyPage = () => {
               <div className="border border-black/15 rounded-3xl p-8">
                 <h2 className="text-2xl mb-4">Description</h2>
                 <p className="flex items-start gap-3 text-lg leading-relaxed">
-                  <Info size={20} className="text-[var(--color-primary)] mt-1 flex-shrink-0" />
+                  <Info
+                    size={20}
+                    className="text-[var(--color-primary)] mt-1 flex-shrink-0"
+                  />
                   {property.description}
                 </p>
               </div>
@@ -188,7 +226,10 @@ const OwnerDetailPropertyPage = () => {
               <div className="border border-black/15 rounded-3xl p-8">
                 <h2 className="text-2xl mb-6">Location</h2>
                 <div className="flex items-start gap-3">
-                  <MapPin size={20} className="text-[var(--color-primary)] mt-1 flex-shrink-0" />
+                  <MapPin
+                    size={20}
+                    className="text-[var(--color-primary)] mt-1 flex-shrink-0"
+                  />
                   <div className="text-lg leading-relaxed">
                     <p>{property.address.streetName}</p>
                     <p>{property.address.buildingName}</p>
@@ -199,7 +240,8 @@ const OwnerDetailPropertyPage = () => {
                       {property.address.state}, {property.address.country}
                     </p>
                     <p className="text-sm text-gray-600 mt-2">
-                      Coordinates: {property.address.lat}, {property.address.lon}
+                      Coordinates: {property.address.lat},{" "}
+                      {property.address.lon}
                     </p>
                   </div>
                 </div>
@@ -209,15 +251,18 @@ const OwnerDetailPropertyPage = () => {
               <div className="space-y-4">
                 <div className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-5 rounded-full text-center">
                   <Link
-                    to={`/owner/property/${property.id}/edit`}
+                    to={`/owner/property/update/${property.id}`}
                     className="block text-lg"
                   >
                     Edit Property
                   </Link>
                 </div>
-                <div className="border-2 border-[var(--color-primary)] text-[var(--color-primary)] p-5 rounded-full text-center">
-                  <button className="block w-full text-lg">
-                    View Analytics
+                <div className="border border-red-500/50 text-red-500/75 p-5 rounded-full text-center">
+                  <button
+                    onClick={handleDeleteProperty}
+                    className="block w-full text-lg"
+                  >
+                    Delete
                   </button>
                 </div>
               </div>

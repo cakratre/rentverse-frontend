@@ -4,6 +4,7 @@ import { getProfile } from "@/services/auth.service";
 import { Mail, User, Calendar, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { verifyRole } from "@/utils/verifyRole";
+import { Icon } from "@iconify/react";
 
 interface ProfileData {
   id: string;
@@ -22,7 +23,7 @@ const OwnerProfilePage = () => {
 
   useEffect(() => {
     verifyRole(navigate, ["Owner"]);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -49,7 +50,11 @@ const OwnerProfilePage = () => {
       <Topbar routeHome="/owner/property" routeProfile="/owner/profile" />
       <div className="min-h-screen bg-[url('/background/blue-sky-whited.png')] bg-cover bg-center flex justify-center items-center">
         {loading ? (
-          <p className="text-white text-lg">Loading...</p>
+          <div className="min-h-screen flex justify-center items-center bg-[var(--color-background)]">
+            <div className="text-center text-[var(--color-text)]">
+              <Icon icon="eos-icons:loading" width="64" height="64" />
+            </div>
+          </div>
         ) : errorMsg ? (
           <p className="text-red-500 text-lg">{errorMsg}</p>
         ) : profile ? (

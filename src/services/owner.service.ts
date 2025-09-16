@@ -60,7 +60,7 @@ export const getOwnerPropertyById = async (id: string) => {
   }
 };
 
-// POST new property
+// POST property
 export const createOwnerProperty = async (data: FormData) => {
   try {
     const token = localStorage.getItem("token");
@@ -97,13 +97,49 @@ export const createOwnerProperty = async (data: FormData) => {
   }
 };
 
-// PUT / Update property by ID
-export const updateOwnerProperty = async (id: string, data: any) => {
+// PUT property by ID
+export const updateOwnerProperty = async (id: string, data: FormData) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) return { success: false, message: "Token tidak ditemukan" };
 
+    console.log("Updating property with ID:", id);
+    console.log("Sending request to:", `${BASE_URL}/owner/property/${id}`);
+
     const res = await axios.put(`${BASE_URL}/owner/property/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error("Update Property Error:", error);
+    if (error.response) {
+      console.error("Response Status:", error.response.status);
+      console.error("Response Data:", error.response.data);
+      return error.response.data;
+    } else if (error.request) {
+      console.error("Request Error:", error.request);
+      return {
+        success: false,
+        message: "Network error - no response received",
+      };
+    } else {
+      console.error("Error Message:", error.message);
+      return { success: false, message: error.message };
+    }
+  }
+};
+
+// DELETE property by ID
+export const deleteOwnerProperty = async (id: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return { success: false, message: "Token tidak ditemukan" };
+
+    const res = await axios.delete(`${BASE_URL}/owner/property/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,16 +1,18 @@
-// src/pages/OwnerCreatePropertyPage.tsx
+// src/pages/OwnerUpdatePropertyPage.tsx
 import axios from "axios";
 import { useState, useCallback, useEffect } from "react";
-import { verifyRole } from "@/utils/verifyRole";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import {
+  getOwnerPropertyById,
+  updateOwnerProperty,
+} from "@/services/owner.service";
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { Icon } from "@iconify/react";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL_API;
+import { verifyRole } from "@/utils/verifyRole";
 
 // Fix leaflet default markers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -35,7 +37,6 @@ interface Address {
 }
 
 interface PropertyResponse {
-  id: string;
   price: number;
   confidenceScore: number;
   name: string;
@@ -56,13 +57,16 @@ const MapClickHandler = ({
   return null;
 };
 
-const OwnerCreatePropertyPage = () => {
+const OwnerUpdatePropertyPage = () => {
+  const { id } = useParams<{ id: string }>();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [numberOfRooms, setNumberOfRooms] = useState("");
   const [size, setSize] = useState("");
   const [furnished, setFurnished] = useState(false);
+  const [price, setPrice] = useState(0);
+  const [confidenceScore, setConfidenceScore] = useState(0);
   const [images, setImages] = useState<File[]>([]);
   const [ownershipCertificate, setOwnershipCertificate] = useState<File | null>(
     null,
@@ -84,10 +88,62 @@ const OwnerCreatePropertyPage = () => {
   });
   const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     verifyRole(navigate, ["Owner"]);
   }, [navigate]);
+
+  // Fetch existing property data
+  useEffect(() => {
+    const fetchProperty = async () => {
+      if (!id) return;
+
+      setIsLoading(true);
+      try {
+        const response = await getOwnerPropertyById(id);
+
+        if (response.success && response.data) {
+          const property = response.data;
+
+          // Populate form fields with existing data
+          setName(property.name || "");
+          setDescription(property.description || "");
+          setPropertyType(property.propertyType || "");
+          setNumberOfRooms(property.numberOfRooms || 0);
+          setSize(property.size || 0);
+          setFurnished(property.furnished || false);
+          setPrice(property.price || 0);
+          setConfidenceScore(property.confidenceScore || 0);
+
+          // Set address data
+          if (property.address) {
+            setAddress({
+              lat: property.address.lat || 5.4164,
+              lon: property.address.lon || 100.3327,
+              streetName: property.address.streetName || "",
+              buildingName: property.address.buildingName || "",
+              area: property.address.area || "",
+              town: property.address.town || "",
+              state: property.address.state || "",
+              country: property.address.country || "",
+            });
+          }
+        } else {
+          alert("Failed to fetch property data");
+          navigate("/owner/property");
+        }
+      } catch (error) {
+        console.error("Error fetching property:", error);
+        alert("Error loading property data");
+        navigate("/owner/property");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [id, navigate]);
 
   // Reverse geocoding function
   const reverseGeocode = useCallback(async (lat: number, lon: number) => {
@@ -158,15 +214,11 @@ const OwnerCreatePropertyPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!id) return;
+
     setIsSubmitting(true);
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Token tidak ditemukan");
-        return;
-      }
-
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
@@ -174,78 +226,57 @@ const OwnerCreatePropertyPage = () => {
       formData.append("numberOfRooms", numberOfRooms.toString());
       formData.append("size", size.toString());
       formData.append("furnished", furnished ? "true" : "false");
+      formData.append("price", price.toString());
+      formData.append("confidenceScore", confidenceScore.toString());
 
-      images.forEach((file) => {
-        formData.append("images", file);
-      });
+      // Only append images if new ones are selected
+      if (images.length > 0) {
+        images.forEach((file) => {
+          formData.append("images", file);
+        });
+      }
 
+      // Only append certificate if a new one is selected
       if (ownershipCertificate) {
         formData.append("ownershipCertificate", ownershipCertificate);
       }
 
-      // nested address - only append if values are not empty
-      formData.append("address[lat]", address.lat.toString());
-      formData.append("address[lon]", address.lon.toString());
-      formData.append("address[streetName]", address.streetName || "");
+      // Address data as JSON string (based on your API field format)
+      const addressData = {
+        lat: address.lat,
+        lon: address.lon,
+        streetName: address.streetName || "",
+        buildingName: address.buildingName || "",
+        area: address.area || "",
+        town: address.town || "",
+        state: address.state || "",
+        country: address.country || "",
+      };
+      formData.append("address", JSON.stringify(addressData));
 
-      // Only append buildingName if it has a value
-      if (address.buildingName && address.buildingName.trim() !== "") {
-        formData.append(
-          "address[buildingName]",
-          address.buildingName?.trim() || "-",
-        );
-      }
-
-      formData.append("address[area]", address.area || "");
-      formData.append("address[town]", address.town || "");
-      formData.append("address[state]", address.state || "");
-      formData.append("address[country]", address.country || "");
-
-      // debug sebelum post
       console.log("FormData Preview:");
       for (const [key, value] of formData.entries()) {
         console.log(key, value);
       }
 
-      const res = await axios.post(`${BASE_URL}/owner/property`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await updateOwnerProperty(id, formData);
 
-      console.log("Success:", res.data);
+      if (res.success) {
+        console.log("Success:", res.data);
 
-      // Set response data and show modal
-      setPropertyResponse({
-        id: res.data.data.id,
-        price: res.data.data.price,
-        confidenceScore: res.data.data.confidenceScore,
-        name: res.data.data.name,
-      });
-      setShowModal(true);
-    } catch (error: any) {
-      console.error("Error:", error.response?.data || error.message);
-
-      // More detailed error handling
-      if (error.response?.data?.errors) {
-        const errorMessages = error.response.data.errors
-          .map((err: any) => {
-            if (err.children && err.children.length > 0) {
-              return err.children
-                .map(
-                  (child: any) =>
-                    `${child.property}: ${Object.values(child.constraints || {}).join(", ")}`,
-                )
-                .join("\n");
-            }
-            return `${err.property}: ${Object.values(err.constraints || {}).join(", ")}`;
-          })
-          .join("\n");
-        alert(`Validation Error:\n${errorMessages}`);
+        // Set response data and show modal
+        setPropertyResponse({
+          price: res.data.price || 0,
+          confidenceScore: res.data.confidenceScore || 0,
+          name: res.data.name || name,
+        });
+        setShowModal(true);
       } else {
-        alert("Gagal membuat property");
+        alert(res.message || "Failed to update property");
       }
+    } catch (error: any) {
+      console.error("Error:", error);
+      alert("Failed to update property");
     } finally {
       setIsSubmitting(false);
     }
@@ -253,16 +284,25 @@ const OwnerCreatePropertyPage = () => {
 
   const closeModal = () => {
     setShowModal(false);
-    const id = propertyResponse?.id;
     setPropertyResponse(null);
-    navigate(`/owner/property/update/${id}`);
+    navigate("/owner/property");
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-[var(--color-background)]">
+        <div className="text-center text-[var(--color-text)]">
+          <Icon icon="eos-icons:loading" width="64" height="64" />
+        </div>
+      </div>
+    );
+  }
 
   if (isSubmitting) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-[var(--color-background)]">
         <div className="text-center text-[var(--color-text)]">
-          <Icon icon="line-md:uploading-loop" width="64" height="64" />
+          <Icon icon="eos-icons:loading" width="64" height="64" />
         </div>
       </div>
     );
@@ -273,16 +313,16 @@ const OwnerCreatePropertyPage = () => {
       {/* Header */}
       <div className="mt-10 pb-10 pl-5">
         <Link
-          to="/owner/property"
+          to={`/owner/property/${id}`}
           className="flex items-center gap-2 text-[var(--color-text)] hover:opacity-80"
         >
           <ArrowLeft size={20} />
-          Back to list property
+          Go to details
         </Link>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight">
-          Add New{" "}
+          Double-Check Your{" "}
           <span className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
-            Property
+            Property Data
           </span>
         </h1>
         <p className="mt-4 text-black/50 text-sm sm:text-base leading-relaxed">
@@ -292,8 +332,55 @@ const OwnerCreatePropertyPage = () => {
         </p>
       </div>
 
-      {/* Form Container */}
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+        {/* Price & Confidence Score*/}
+        <div className="flex flex-col gap-5 p-5 border-3 border-[var(--color-border)] rounded-3xl">
+          {/* Price */}
+          <div className="flex flex-col gap-3">
+            {/* Label */}
+            <label className="pl-5 text-sm font-medium text-[var(--color-text)]">
+              Price (MYR)
+            </label>
+
+            {/* Input */}
+            <input
+              type="number"
+              step="0.01"
+              value={price ?? ""}
+              onChange={(e) => setPrice(Number(e.target.value))}
+              placeholder="Enter property price"
+              className="w-full border border-[var(--color-border)] p-5 rounded-2xl"
+              min={0}
+            />
+
+            {/* Hint */}
+            <p className="pl-5 text-xs text-[var(--color-text)]">
+              *Enter the price in MYR.
+            </p>
+          </div>
+
+          {/* Confidence Score */}
+          <div className="flex flex-col gap-3">
+            {/* Label */}
+            <label className="pl-5 text-sm font-medium text-[var(--color-text)]">
+              Confidence Score (%)
+            </label>
+
+            {/* Input - Read Only */}
+            <input
+              type="number"
+              value={confidenceScore}
+              readOnly
+              className="w-full border border-[var(--color-border)] p-5 rounded-2xl bg-gray-50 text-[var(--color-text)] cursor-not-allowed"
+            />
+
+            {/* Hint */}
+            <p className="pl-5 text-xs text-[var(--color-text)]">
+              *This score is automatically calculated and cannot be edited.
+            </p>
+          </div>
+        </div>
+
         {/* Property Name */}
         <div className="flex flex-col gap-3">
           {/* Label */}
@@ -705,7 +792,7 @@ const OwnerCreatePropertyPage = () => {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Processing..." : "Prediksi Harga"}
+          {isSubmitting ? "Processing..." : "Update Property"}
         </button>
       </form>
 
@@ -733,7 +820,7 @@ const OwnerCreatePropertyPage = () => {
               </div>
 
               <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Property Created Successfully!
+                Property Updated Successfully!
               </h3>
 
               <div className="bg-white rounded-3xl p-4 mb-6">
@@ -785,4 +872,4 @@ const OwnerCreatePropertyPage = () => {
   );
 };
 
-export default OwnerCreatePropertyPage;
+export default OwnerUpdatePropertyPage;

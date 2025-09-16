@@ -18,8 +18,8 @@ import TenantProfilePage from "@/components/pages/TenantProfilePage";
 import OwnerPropertyPage from "@/components/pages/OwnerPropertyPage";
 import OwnerDetailPropertyPage from "@/components/pages/OwnerDetailPropertyPage";
 import OwnerCreatePropertyPage from "@/components/pages/OwnerCreatePropertyPage";
-import OwnerPredictPricePage from "@/components/pages/OwnerPredictPricePage";
 import OwnerProfilePage from "@/components/pages/OwnerProfilePage";
+import OwnerUpdatePropertyPage from "@/components/pages/OwnerUpdatePropertyPage";
 
 // Admin
 import AdminApprovalsPage from "@/components/pages/AdminApprovalsPage";
@@ -47,10 +47,7 @@ export const routes = [
   { path: "/owner/property", element: <OwnerPropertyPage /> },
   { path: "/owner/property/:id", element: <OwnerDetailPropertyPage /> },
   { path: "/owner/property/create", element: <OwnerCreatePropertyPage /> },
-  {
-    path: "/owner/property/create/predict",
-    element: <OwnerPredictPricePage />,
-  },
+  { path: "/owner/property/update/:id", element: <OwnerUpdatePropertyPage /> },
   { path: "/owner/profile", element: <OwnerProfilePage /> },
 
   // Admin
