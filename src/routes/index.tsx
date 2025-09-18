@@ -5,13 +5,12 @@ import NotFound from "@/components/pages/NotFound";
 import HomePage from "@/components/pages/HomePage";
 import LoginPage from "@/components/pages/LoginPage";
 import RegisterPage from "@/components/pages/RegisterPage";
+import PropertyPage from "@/components/pages/PropertyPage";
 
 // Tenant
-import TenantHomePage from "@/components/pages/TenantHomePage";
 import TenantPropertyPage from "@/components/pages/TenantPropertyPage";
 import TenantDetailPropertyPage from "@/components/pages/TenantDetailPropertyPage";
-import TenantRentalAgreementPage from "@/components/pages/TenantRentalAgreementPage";
-import TenantDetailRentalAgreementPage from "@/components/pages/TenantDetailRentalAgreementPage";
+import TenantRentalHistoryPage from "@/components/pages/TenantRentalHistoryPage";
 import TenantProfilePage from "@/components/pages/TenantProfilePage";
 
 // Owner
@@ -29,18 +28,14 @@ import AdminProfilePage from "@/components/pages/AdminProfilePage";
 export const routes = [
   // Guest
   { path: "/", element: <HomePage /> },
+  { path: "/property", element: <PropertyPage /> },
   { path: "/auth/login", element: <LoginPage /> },
   { path: "/auth/register", element: <RegisterPage /> },
 
   // Tenant
-  { path: "/tenant", element: <TenantHomePage /> },
   { path: "/tenant/property", element: <TenantPropertyPage /> },
   { path: "/tenant/property/:id", element: <TenantDetailPropertyPage /> },
-  { path: "/tenant/rental-agreement", element: <TenantRentalAgreementPage /> },
-  {
-    path: "/tenant/rental-agreement/:id",
-    element: <TenantDetailRentalAgreementPage />,
-  },
+  { path: "/tenant/rental/history", element: <TenantRentalHistoryPage /> },
   { path: "/tenant/profile", element: <TenantProfilePage /> },
 
   // Owner

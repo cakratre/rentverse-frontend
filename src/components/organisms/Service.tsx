@@ -34,7 +34,7 @@ const Service = () => {
   ];
 
   return (
-    <div className="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16">
+    <div className="border-t border-[var(--color-border)] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16">
       {/* Header */}
       <div>
         <p className="text-xs p-3 text-black/50 border border-black/15 w-fit rounded-full">
@@ -77,10 +77,10 @@ const Service = () => {
             </div>
 
             {/* Content */}
-            <h3 className="text-xl sm:text-2xl font-semibold text-color-text">
+            <h3 className="text-xl sm:text-2xl font-normal text-color-text">
               {item.title}
             </h3>
-            <p className="text-sm text-black/70">{item.description}</p>
+            <p className="text-sm text-black/50">{item.description}</p>
 
             <div className="mt-2 grid grid-cols-2 gap-2">
               {item.features.map((feature, i) => (

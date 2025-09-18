@@ -1,3 +1,4 @@
+// services/tenant.service.ts
 import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL_API;
@@ -64,6 +65,71 @@ export const getTenantPropertyById = async (id: string) => {
     }
 
     const res = await axios.get(`${BASE_URL}/tenant/properties/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    } else {
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
+    }
+  }
+};
+
+// RENT Property
+export const rentTenantProperty = async (
+  id: string,
+  data: { startDate: string; duration: number },
+) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return { success: false, message: "Token tidak ditemukan" };
+    }
+
+    const res = await axios.post(
+      `${BASE_URL}/tenant/rent/${id}`,
+      data, // kirim body
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return res.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    } else {
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
+    }
+  }
+};
+
+// GET Tenant Rent History
+export const getTenantRentHistory = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return { success: false, message: "Token tidak ditemukan" };
+    }
+
+    const res = await axios.get(`${BASE_URL}/tenant/rent/history`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

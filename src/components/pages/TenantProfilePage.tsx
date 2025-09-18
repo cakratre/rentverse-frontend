@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import Topbar from "@/components/organisms/Topbar";
+import { Link } from "react-router-dom";
 import { getProfile } from "@/services/auth.service";
-import { Mail, User, Calendar, RefreshCw } from "lucide-react";
+import { Mail, User, Calendar, RefreshCw, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { verifyRole } from "@/utils/verifyRole";
+import { Icon } from "@iconify/react";
 
 interface ProfileData {
   id: string;
@@ -22,7 +23,7 @@ const TenantProfilePage = () => {
 
   useEffect(() => {
     verifyRole(navigate, ["Tenant"]);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -46,10 +47,41 @@ const TenantProfilePage = () => {
 
   return (
     <div>
-      <Topbar routeHome="/tenant" routeProfile="/tenant/profile" />
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50">
+        <ul className="flex justify-center bg-transparent backdrop-blur p-6 border border-[var(--color-border)] gap-10">
+          <li className="flex items-center gap-2">
+            <Home className="w-5 h-5 text-[var(--color-text)]/75" />
+            <Link className="text-[var(--color-text)]/75" to="/tenant/property">
+              Home
+            </Link>
+          </li>
+          <li className="flex items-center gap-2">
+            <Home className="w-5 h-5 text-[var(--color-text)]/75" />
+            <Link
+              className="text-[var(--color-text)]/75"
+              to="/tenant/rental/history"
+            >
+              Rent History
+            </Link>
+          </li>
+          <li className="flex items-center gap-2">
+            <User className="w-5 h-5 text-[var(--color-text)]/75" />
+            <Link className="text-[var(--color-text)]/75" to="/tenant/profile">
+              Profile
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Profile */}
       <div className="min-h-screen bg-[url('/background/blue-sky-whited.png')] bg-cover bg-center flex justify-center items-center">
         {loading ? (
-          <p className="text-white text-lg">Loading profile...</p>
+          <div className="min-h-screen flex justify-center items-center bg-[var(--color-background)]">
+            <div className="text-center text-[var(--color-text)]">
+              <Icon icon="eos-icons:loading" width="64" height="64" />
+            </div>
+          </div>
         ) : errorMsg ? (
           <p className="text-red-500 text-lg">{errorMsg}</p>
         ) : profile ? (

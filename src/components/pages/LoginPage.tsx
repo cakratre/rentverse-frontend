@@ -67,7 +67,7 @@ const LoginPage = () => {
             navigate("/admin/approvals");
             break;
           case "Tenant":
-            navigate("/tenant");
+            navigate("/tenant/property");
             break;
           default:
             navigate("/");
