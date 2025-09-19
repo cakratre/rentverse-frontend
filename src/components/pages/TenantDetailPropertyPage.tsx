@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { verifyRole } from "@/utils/verifyRole";
 
+const VITE_DOCUSIGN_BASE_URL_API = import.meta.env.VITE_DOCUSIGN_BASE_URL_API;
+
 interface Property {
   id: string;
   name: string;
@@ -49,6 +51,12 @@ interface Property {
   };
 }
 
+type ApiResult = {
+  success: boolean;
+  message: string;
+  envelopeId?: string;
+} | null;
+
 const TenantDetailPropertyPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -61,6 +69,12 @@ const TenantDetailPropertyPage = () => {
   const [startDate, setStartDate] = useState("");
   const [duration, setDuration] = useState(1);
   const [rentLoading, setRentLoading] = useState(false);
+
+  // Rental agreement form states
+  const [tenantName, setTenantName] = useState("");
+  const [tenantEmail, setTenantEmail] = useState("");
+  const [tenantAddress, setTenantAddress] = useState("");
+  const [agreementResult, setAgreementResult] = useState<ApiResult>(null);
 
   useEffect(() => {
     verifyRole(navigate, ["Tenant"]);
@@ -85,18 +99,74 @@ const TenantDetailPropertyPage = () => {
   }, [id]);
 
   const handleRent = async () => {
-    if (!id) return;
+    if (!id || !property) return;
     setRentLoading(true);
-    const res = await rentTenantProperty(id, { startDate, duration });
-    setRentLoading(false);
+    setAgreementResult(null);
 
-    if (res.success) {
-      alert("Sewa properti berhasil!");
-      setShowModal(false);
+    // First, rent the property
+    const rentRes = await rentTenantProperty(id, { startDate, duration });
+
+    if (rentRes.success) {
+      // Then generate rental agreement
+      const formData = new FormData();
+      formData.append("tenantName", tenantName);
+      formData.append("tenantEmail", tenantEmail);
+      formData.append("tenantAddress", tenantAddress);
+      formData.append("ownerName", property.owner.name);
+      formData.append("ownerEmail", property.owner.email);
+      formData.append(
+        "ownerAddress",
+        `${property.address.streetName}, ${property.address.buildingName}, ${property.address.area}, ${property.address.town}, ${property.address.state}, ${property.address.country}`
+      );
+      formData.append(
+        "propertyAddress",
+        `${property.address.streetName}, ${property.address.buildingName}, ${property.address.area}, ${property.address.town}, ${property.address.state}, ${property.address.country}`
+      );
+      formData.append("propertyType", property.propertyType);
+      formData.append("size", property.size.toString());
+      formData.append("numberOfRoom", property.numberOfRooms.toString());
+      formData.append("furnished", String(property.furnished));
+      formData.append("startDate", startDate);
+      formData.append("duration", (duration * 30).toString()); // Convert months to days
+      formData.append("price", property.price.toString());
+
+      try {
+        const response = await fetch(
+          `${VITE_DOCUSIGN_BASE_URL_API}`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data: ApiResult = await response.json();
+        setAgreementResult(data);
+
+        if (data?.success) {
+          alert(
+            "Sewa properti berhasil dan kontrak telah dikirim untuk ditandatangani!"
+          );
+        } else {
+          alert(`Sewa berhasil, tapi gagal mengirim kontrak: ${data?.message}`);
+        }
+      } catch (error) {
+        setAgreementResult({
+          success: false,
+          message: "Network error saat mengirim kontrak.",
+        });
+        alert(
+          "Sewa berhasil, tapi gagal mengirim kontrak karena masalah jaringan."
+        );
+      }
     } else {
-      alert(`Gagal: ${res.message}`);
+      alert(`Gagal: ${rentRes.message}`);
     }
+
+    setRentLoading(false);
   };
+
+  const inputStyle =
+    "w-full p-3 border border-black/15 rounded-2xl bg-[var(--color-background)] text-[var(--color-text)]";
 
   if (loading)
     return (
@@ -317,31 +387,174 @@ const TenantDetailPropertyPage = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-transparent backdrop-blur bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-[var(--color-background)] border border-black/15 rounded-3xl p-8 w-full max-w-md mx-4">
-            <h2 className="text-2xl font-semibold mb-6">Rent Property</h2>
+        <div className="fixed inset-0 bg-transparent backdrop-blur bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-[var(--color-background)] border border-black/15 rounded-3xl p-8 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl font-semibold mb-6">Rental Agreement Form</h2>
 
             <div className="space-y-6">
-              <div>
-                <label className="block text-lg mb-2">Start Date:</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full p-3 border border-black/15 rounded-2xl bg-[var(--color-background)] text-[var(--color-text)]"
-                />
-              </div>
+              {/* Tenant Details */}
+              <fieldset className="border border-black/15 p-5 rounded-3xl">
+                <legend className="text-lg font-semibold px-2 text-[var(--color-text)]">
+                  Tenant Details
+                </legend>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      className={inputStyle}
+                      value={tenantName}
+                      onChange={(e) => setTenantName(e.target.value)}
+                      placeholder="Enter your full name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      className={inputStyle}
+                      value={tenantEmail}
+                      onChange={(e) => setTenantEmail(e.target.value)}
+                      placeholder="example@mail.com"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Current Address
+                    </label>
+                    <input
+                      className={inputStyle}
+                      value={tenantAddress}
+                      onChange={(e) => setTenantAddress(e.target.value)}
+                      placeholder="Enter your current address"
+                      required
+                    />
+                  </div>
+                </div>
+              </fieldset>
 
-              <div>
-                <label className="block text-lg mb-2">Duration (months):</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={duration}
-                  onChange={(e) => setDuration(Number(e.target.value))}
-                  className="w-full p-3 border border-black/15 rounded-2xl bg-[var(--color-background)] text-[var(--color-text)]"
-                />
-              </div>
+              {/* Owner Details - Read Only */}
+              <fieldset className="border border-black/15 p-5 rounded-3xl bg-gray-50">
+                <legend className="text-lg font-semibold px-2 text-[var(--color-text)]">
+                  Owner Details (Auto-filled)
+                </legend>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      className={`${inputStyle} bg-gray-100`}
+                      value={property?.owner.name || ""}
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Email
+                    </label>
+                    <input
+                      className={`${inputStyle} bg-gray-100`}
+                      value={property?.owner.email || ""}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </fieldset>
+
+              {/* Property & Rent Details - Auto-filled */}
+              <fieldset className="border border-black/15 p-5 rounded-3xl bg-gray-50">
+                <legend className="text-lg font-semibold px-2 text-[var(--color-text)]">
+                  Property & Rent Details (Auto-filled)
+                </legend>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Property Address
+                    </label>
+                    <input
+                      className={`${inputStyle} bg-gray-100`}
+                      value={
+                        property
+                          ? `${property.address.streetName}, ${property.address.buildingName}, ${property.address.area}, ${property.address.town}, ${property.address.state}, ${property.address.country}`
+                          : ""
+                      }
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      className={inputStyle}
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Duration (months)
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      className={inputStyle}
+                      value={duration}
+                      onChange={(e) => setDuration(Number(e.target.value))}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Monthly Rent Price (MYR)
+                    </label>
+                    <input
+                      className={`${inputStyle} bg-gray-100`}
+                      value={property?.price || ""}
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                      Property Type
+                    </label>
+                    <input
+                      className={`${inputStyle} bg-gray-100`}
+                      value={property?.propertyType || ""}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </fieldset>
+
+              {/* Result Display */}
+              {agreementResult && (
+                <div
+                  className={`p-4 rounded-2xl ${
+                    agreementResult.success
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  <p className="font-bold">
+                    {agreementResult.success ? "Success!" : "Error"}
+                  </p>
+                  <p className="text-sm">{agreementResult.message}</p>
+                  {agreementResult.success && agreementResult.envelopeId && (
+                    <p className="text-xs mt-2">
+                      Envelope ID: {agreementResult.envelopeId}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex gap-4 mt-8">
@@ -353,10 +566,16 @@ const TenantDetailPropertyPage = () => {
               </button>
               <button
                 onClick={handleRent}
-                disabled={rentLoading}
+                disabled={
+                  rentLoading ||
+                  !tenantName ||
+                  !tenantEmail ||
+                  !tenantAddress ||
+                  !startDate
+                }
                 className="flex-1 p-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white rounded-2xl hover:opacity-90 disabled:opacity-50"
               >
-                {rentLoading ? "Processing..." : "Confirm Rent"}
+                {rentLoading ? "Processing..." : "Rent & Generate Agreement"}
               </button>
             </div>
           </div>
