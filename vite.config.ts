@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
     allowedHosts: [
-      'homelab-rentverse-by-cakratre.yogaone.me'
+      'rentverse.yogaone.me'
     ]
   }
 

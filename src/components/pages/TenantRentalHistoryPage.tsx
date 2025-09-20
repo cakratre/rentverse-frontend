@@ -3,6 +3,8 @@ import { getTenantRentHistory } from "@/services/tenant.service";
 import { Home, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react";
+import { verifyRole } from "@/utils/verifyRole";
+import { useNavigate } from "react-router-dom";
 
 interface RentalHistory {
   id: string;
@@ -28,6 +30,11 @@ const TenantRentalHistoryPage = () => {
   const [history, setHistory] = useState<RentalHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    verifyRole(navigate, ["Tenant"]);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchHistory = async () => {

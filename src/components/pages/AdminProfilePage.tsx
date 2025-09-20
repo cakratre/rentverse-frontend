@@ -23,7 +23,7 @@ const AdminProfilePage = () => {
 
   useEffect(() => {
     verifyRole(navigate, ["Admin"]);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchProfile = async () => {

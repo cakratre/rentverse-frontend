@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { verifyRole } from "@/utils/verifyRole";
 
-const VITE_DOCUSIGN_BASE_URL_API = import.meta.env.VITE_DOCUSIGN_BASE_URL_API;
+const VITE_DOCUSIGN_BASE_URL_API = import.meta.env.VITE_DOCUSIGN_BASE_URL_API_V1 || import.meta.env.VITE_DOCUSIGN_BASE_URL_API_V2 || import.meta.env.VITE_DOCUSIGN_BASE_URL_API_V3;
 
 interface Property {
   id: string;
@@ -149,7 +149,7 @@ const TenantDetailPropertyPage = () => {
         } else {
           alert(`Sewa berhasil, tapi gagal mengirim kontrak: ${data?.message}`);
         }
-      } catch (error) {
+      } catch {
         setAgreementResult({
           success: false,
           message: "Network error saat mengirim kontrak.",

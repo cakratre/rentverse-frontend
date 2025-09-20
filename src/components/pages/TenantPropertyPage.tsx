@@ -12,6 +12,8 @@ import {
   ChevronRight,
   User,
 } from "lucide-react";
+import { verifyRole } from "@/utils/verifyRole";
+import { useNavigate } from "react-router-dom";
 
 interface PropertyImage {
   id: string;
@@ -76,6 +78,12 @@ const TenantPropertyPage = () => {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    verifyRole(navigate, ["Tenant"]);
+  }, [navigate]);
 
   // Filter functions
   const filterByLocation = (
