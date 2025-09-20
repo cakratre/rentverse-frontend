@@ -501,7 +501,7 @@ const TenantDetailPropertyPage = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
-                      Duration (months)
+                      Duration (Days)
                     </label>
                     <input
                       type="number"

@@ -77,22 +77,25 @@ export const createOwnerProperty = async (data: FormData) => {
     });
 
     return res.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("API Error Details:", error);
-    if (error.response) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error("Response Status:", error.response.status);
       console.error("Response Data:", error.response.data);
       console.error("Response Headers:", error.response.headers);
       return error.response.data;
-    } else if (error.request) {
+    } else if (axios.isAxiosError(error) && error.request) {
       console.error("Request Error:", error.request);
       return {
         success: false,
         message: "Network error - no response received",
       };
     } else {
-      console.error("Error Message:", error.message);
-      return { success: false, message: error.message };
+      console.error("Error Message:", error instanceof Error ? error.message : "An unknown error occurred");
+      return { 
+        success: false, 
+        message: error instanceof Error ? error.message : "An unknown error occurred" 
+      };
     }
   }
 };
@@ -114,21 +117,24 @@ export const updateOwnerProperty = async (id: string, data: FormData) => {
     });
 
     return res.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Update Property Error:", error);
-    if (error.response) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error("Response Status:", error.response.status);
       console.error("Response Data:", error.response.data);
       return error.response.data;
-    } else if (error.request) {
+    } else if (axios.isAxiosError(error) && error.request) {
       console.error("Request Error:", error.request);
       return {
         success: false,
         message: "Network error - no response received",
       };
     } else {
-      console.error("Error Message:", error.message);
-      return { success: false, message: error.message };
+      console.error("Error Message:", error instanceof Error ? error.message : "An unknown error occurred");
+      return { 
+        success: false, 
+        message: error instanceof Error ? error.message : "An unknown error occurred" 
+      };
     }
   }
 };

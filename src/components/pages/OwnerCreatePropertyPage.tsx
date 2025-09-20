@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Icon } from "@iconify/react";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL_API;
+const BASE_URL = import.meta.env.VITE_BASE_URL_API_V1 || import.meta.env.VITE_BASE_URL_API_V2 || import.meta.env.VITE_BASE_URL_API_V3;
 
 // Fix leaflet default markers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -582,14 +582,10 @@ const OwnerCreatePropertyPage = () => {
               <input
                 type="number"
                 step="any"
+                disabled
+                readOnly
                 value={address.lat}
-                onChange={(e) =>
-                  setAddress({
-                    ...address,
-                    lat: parseFloat(e.target.value) || 0,
-                  })
-                }
-                className="w-full border border-[var(--color-border)] p-4 rounded-2xl"
+                className="w-full border border-[var(--color-border)] p-4 rounded-2xl bg-gray-100 cursor-not-allowed"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -599,14 +595,10 @@ const OwnerCreatePropertyPage = () => {
               <input
                 type="number"
                 step="any"
+                disabled
+                readOnly
                 value={address.lon}
-                onChange={(e) =>
-                  setAddress({
-                    ...address,
-                    lon: parseFloat(e.target.value) || 0,
-                  })
-                }
-                className="w-full border border-[var(--color-border)] p-4 rounded-2xl"
+                className="w-full border border-[var(--color-border)] p-4 rounded-2xl bg-gray-100 cursor-not-allowed"
               />
             </div>
           </div>
@@ -745,10 +737,10 @@ const OwnerCreatePropertyPage = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Estimated Price:</span>
                     <span className="font-semibold text-green-600 text-lg">
-                      $
                       {propertyResponse.price.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                       })}
+                      -MYR
                     </span>
                   </div>
 
