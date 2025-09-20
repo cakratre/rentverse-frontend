@@ -57,7 +57,7 @@ const RegisterPage = () => {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Register gagal!";
+          ?.message || "Registration failed!";
       setErrorMsg(msg);
     } finally {
       setLoading(false);
@@ -88,9 +88,9 @@ const RegisterPage = () => {
                 type="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Masukan name..."
+                placeholder="Enter your name..."
                 icon={<User size={18} />}
-                hint="*Masukan name aktif anda"
+                hint="*Enter your active name"
               />
 
               {/* Email */}
@@ -100,9 +100,9 @@ const RegisterPage = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Masukan email..."
+                placeholder="Enter your email..."
                 icon={<Mail size={18} />}
-                hint="*Masukan email aktif anda"
+                hint="*Enter your active email"
               />
 
               {/* Role */}
@@ -111,15 +111,15 @@ const RegisterPage = () => {
                 label="Role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                placeholder="Pilih role..."
+                placeholder="Choose role..."
                 options={[
                   { label: "Owner", value: "Owner" },
                   { label: "Tenant", value: "Tenant" },
                 ]}
                 hint={
                   <>
-                    *Owner, jika kamu pelilik property <br />
-                    *Tenant, jika kamu mau cari property
+                    *Owner, if you own property <br />
+                    *Tenant, if you want to find property
                   </>
                 }
               />
@@ -133,13 +133,13 @@ const RegisterPage = () => {
                 label="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Masukan password..."
+                placeholder="Enter password..."
                 validationMessage={
                   password.length === 0
-                    ? "*Minimal 8 karakter, harus ada huruf besar, kecil, dan angka"
+                    ? "*Minimum 8 characters, must contain uppercase, lowercase, and numbers"
                     : passwordValid
-                      ? "✅ Password valid"
-                      : "❌ Password harus ada huruf besar, kecil, dan angka"
+                      ? "✅ Password is valid"
+                      : "❌ Password must contain uppercase, lowercase, and numbers"
                 }
                 isValid={password.length === 0 ? undefined : passwordValid}
               />
@@ -147,17 +147,17 @@ const RegisterPage = () => {
               {/* Confirm Password */}
               <PasswordField
                 id="confirmPassword"
-                label="Konfirmasi Password"
+                label="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Ulangi password..."
-                hint="*Ulangi kembali password"
+                placeholder="Repeat password..."
+                hint="*Repeat your password"
                 validationMessage={
                   confirmPassword.length === 0
                     ? undefined
                     : confirmValid
-                      ? "✅ Password cocok"
-                      : "❌ Password tidak sama"
+                      ? "✅ Password matches"
+                      : "❌ Password doesn't match"
                 }
                 isValid={
                   confirmPassword.length === 0 ? undefined : confirmValid
@@ -170,7 +170,7 @@ const RegisterPage = () => {
                 disabled={!passwordValid || !confirmValid || !role || loading}
                 className="p-4 sm:p-5 w-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white disabled:opacity-50 disabled:cursor-not-allowed lg:mt-auto"
               >
-                {loading ? "Processing..." : "Daftar"}
+                {loading ? "Processing..." : "Register"}
               </button>
             </div>
           </div>
@@ -189,16 +189,16 @@ const RegisterPage = () => {
 
           {/* Have Account */}
           <div className="flex justify-center gap-2 text-base text-[var(--color-text)]/50">
-            <p>Sudah punya akun?</p>
+            <p>Already have an account?</p>
             <Link to={"/auth/login"} className="text-[var(--color-primary)]">
-              Masuk
+              Sign In
             </Link>
           </div>
 
           {/* Back to Home */}
           <div className="flex justify-center">
             <Link to="/" className="text-base text-[var(--color-text)]/50">
-              Kembali ke beranda
+              Back to home
             </Link>
           </div>
         </form>

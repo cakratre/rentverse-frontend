@@ -72,7 +72,7 @@ const AdminApprovalsPage = () => {
                 <th className="p-3 text-left">Type</th>
                 <th className="p-3 text-left">Rooms</th>
                 <th className="p-3 text-left">Furnished</th>
-                <th className="p-3 text-left">Size (m2)</th>
+                <th className="p-3 text-left">Size (m²)</th>
                 <th className="p-3 text-left">Price (MYR)</th>
                 <th className="p-3 text-left">Status</th>
                 <th className="p-3 text-left">Owner</th>

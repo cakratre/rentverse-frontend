@@ -13,7 +13,7 @@ import { Icon } from "@iconify/react";
 const BASE_URL = import.meta.env.VITE_BASE_URL_API_V1 || import.meta.env.VITE_BASE_URL_API_V2 || import.meta.env.VITE_BASE_URL_API_V3;
 
 // Fix leaflet default markers
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -61,7 +61,7 @@ const OwnerCreatePropertyPage = () => {
   const [description, setDescription] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [numberOfRooms, setNumberOfRooms] = useState("");
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState<string | number>("");
   const [furnished, setFurnished] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [ownershipCertificate, setOwnershipCertificate] = useState<File | null>(
@@ -224,17 +224,18 @@ const OwnerCreatePropertyPage = () => {
         name: res.data.data.name,
       });
       setShowModal(true);
-    } catch (error: any) {
-      console.error("Error:", error.response?.data || error.message);
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { errors?: Array<{ property: string; constraints?: Record<string, string>; children?: Array<{ property: string; constraints?: Record<string, string> }> }> } }; message?: string };
+      console.error("Error:", axiosError.response?.data || axiosError.message);
 
       // More detailed error handling
-      if (error.response?.data?.errors) {
-        const errorMessages = error.response.data.errors
-          .map((err: any) => {
+      if (axiosError.response?.data?.errors) {
+        const errorMessages = axiosError.response.data.errors
+          .map((err: { property: string; constraints?: Record<string, string>; children?: Array<{ property: string; constraints?: Record<string, string> }> }) => {
             if (err.children && err.children.length > 0) {
               return err.children
                 .map(
-                  (child: any) =>
+                  (child: { property: string; constraints?: Record<string, string> }) =>
                     `${child.property}: ${Object.values(child.constraints || {}).join(", ")}`,
                 )
                 .join("\n");
@@ -394,13 +395,12 @@ const OwnerCreatePropertyPage = () => {
             Size (m²)
           </label>
 
-          {/* Input */}
           <input
             type="number"
             value={size ?? ""}
             placeholder="Enter property size in m²"
             onChange={(e) =>
-              setSize(e.target.value === "" ? null : Number(e.target.value))
+              setSize(e.target.value === "" ? "" : Number(e.target.value))
             }
             className="w-full border border-[var(--color-border)] p-5 rounded-2xl"
             min={0}

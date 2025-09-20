@@ -15,7 +15,7 @@ import { ArrowLeft } from "lucide-react";
 import { verifyRole } from "@/utils/verifyRole";
 
 // Fix leaflet default markers
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -63,7 +63,7 @@ const OwnerUpdatePropertyPage = () => {
   const [description, setDescription] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [numberOfRooms, setNumberOfRooms] = useState("");
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState<number | string>("");
   const [furnished, setFurnished] = useState(false);
   const [price, setPrice] = useState(0);
   const [confidenceScore, setConfidenceScore] = useState(0);
@@ -111,7 +111,7 @@ const OwnerUpdatePropertyPage = () => {
           setDescription(property.description || "");
           setPropertyType(property.propertyType || "");
           setNumberOfRooms(property.numberOfRooms || 0);
-          setSize(property.size || 0);
+          setSize(property.size || "");
           setFurnished(property.furnished || false);
           setPrice(property.price || 0);
           setConfidenceScore(property.confidenceScore || 0);
@@ -274,7 +274,7 @@ const OwnerUpdatePropertyPage = () => {
       } else {
         alert(res.message || "Failed to update property");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       alert("Failed to update property");
     } finally {
@@ -487,7 +487,7 @@ const OwnerUpdatePropertyPage = () => {
             value={size ?? ""}
             placeholder="Enter property size in m²"
             onChange={(e) =>
-              setSize(e.target.value === "" ? null : Number(e.target.value))
+              setSize(e.target.value === "" ? "" : Number(e.target.value))
             }
             className="w-full border border-[var(--color-border)] p-5 rounded-2xl"
             min={0}

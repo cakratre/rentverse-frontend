@@ -28,11 +28,11 @@ const LoginPage = () => {
     setSuccessMsg("");
 
     if (!email.trim()) {
-      setErrorMsg("Email harus diisi");
+      setErrorMsg("Email is required");
       return;
     }
     if (!password.trim()) {
-      setErrorMsg("Password harus diisi");
+      setErrorMsg("Password is required");
       return;
     }
 
@@ -48,13 +48,13 @@ const LoginPage = () => {
         // Check if token is expired
         const currentTime = Date.now() / 1000;
         if (decoded.exp < currentTime) {
-          setErrorMsg("Token sudah expired");
+          setErrorMsg("Token has expired");
           return;
         }
 
         // Simpan token
         localStorage.setItem("token", res.data.token);
-        setSuccessMsg("Login berhasil!");
+        setSuccessMsg("Login successful!");
 
         reset();
 
@@ -73,20 +73,20 @@ const LoginPage = () => {
             navigate("/");
         }
       } else {
-        setErrorMsg("Login gagal! Silakan coba lagi");
+        setErrorMsg("Login failed! Please try again");
       }
     } catch (err: unknown) {
       // Better error handling
       if (err && typeof err === "object" && "response" in err) {
         const response = (err as { response?: { data?: { message?: string } } })
           .response;
-        const msg = response?.data?.message || "Terjadi kesalahan pada server";
+        const msg = response?.data?.message || "Server error occurred";
         setErrorMsg(msg);
       } else if (err instanceof Error) {
         setErrorMsg(err.message);
       } else {
         setErrorMsg(
-          "Tidak dapat terhubung ke server. Periksa koneksi internet Anda",
+          "Cannot connect to server. Please check your internet connection",
         );
       }
     } finally {
@@ -127,9 +127,9 @@ const LoginPage = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Masukan email..."
+            placeholder="Enter your email..."
             icon={<Mail size={18} />}
-            hint="*Masukan email aktif anda"
+            hint="*Enter your active email"
           />
 
           {/* Password */}
@@ -138,8 +138,8 @@ const LoginPage = () => {
             label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            hint="*Masukan kembali password yang sudah anda buat sebelumnya, 8 karakter, ada huruf besar, kecil, dan angka"
-            placeholder="Masukan password..."
+            hint="*Enter the password you created before, 8 characters, with uppercase, lowercase, and numbers"
+            placeholder="Enter password..."
           />
 
           {/* Submit */}
@@ -148,12 +148,12 @@ const LoginPage = () => {
             disabled={loading}
             className="p-4 sm:p-5 w-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Loading..." : "Masuk"}
+            {loading ? "Loading..." : "Sign In"}
           </button>
 
           {/* Have Account */}
           <div className="flex justify-center gap-2 text-base">
-            <p className="text-[var(--color-text)]/50">Belum punya akun?</p>
+            <p className="text-[var(--color-text)]/50">Don't have an account?</p>
             <Link to="/auth/register" className="text-[var(--color-primary)]">
               Create Account
             </Link>
@@ -162,7 +162,7 @@ const LoginPage = () => {
           {/* Back to Home */}
           <div className="flex justify-center">
             <Link to="/" className="text-base text-[var(--color-text)]/50">
-              Kembali ke beranda
+              Back to home
             </Link>
           </div>
         </form>
