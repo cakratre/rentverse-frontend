@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
     allowedHosts: [
-      'rentverse.yogaone.me'
+      'google-cloud-platform.yogaone.me'
     ]
   }
 
