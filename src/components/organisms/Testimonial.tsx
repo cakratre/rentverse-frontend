@@ -6,27 +6,27 @@ const Testimonial = () => {
 
   const testimonials = [
     {
-      name: "Ridha",
+      name: "M. Ridho Ansari",
       role: "Family Traveler",
       content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea ullam commodi porro repudiandae quasi.",
+        "Staying here with my family was amazing. The kids had plenty of space to play while we could relax. Facilities were complete and very family-friendly!",
       profile: "./profile.png",
       company: "https://static.cdnlogo.com/logos/m/59/meta.svg",
     },
     {
-      name: "Yogawan",
+      name: "Yogawan Aditya Pratama",
       role: "Solo Traveler",
       content:
-        "Doloribus rerum reiciendis numquam deleniti itaque, repellendus suscipit quisquam maiores.",
+        "The place was peaceful and perfect for solo traveling. The staff were welcoming and always ready to help. It really felt like a second home.",
       profile: "./profile.png",
       company:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png",
     },
     {
-      name: "Alif",
+      name: "Alif Arya Kusuma",
       role: "Expat Professional",
       content:
-        "Repellat voluptas beatae doloremque asperiores sequi nisi nemo magni accusantium.",
+        "As an expat, I needed somewhere comfortable yet practical. Remote work was smooth thanks to the reliable internet and supportive environment.",
       profile: "./profile.png",
       company:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png",
@@ -35,7 +35,7 @@ const Testimonial = () => {
       name: "Joko Supriyanto",
       role: "Corporate Guest",
       content:
-        "Sapiente, dolores numquam. Ratione quos doloremque voluptatibus officiis!",
+        "Business meetings ran seamlessly thanks to the professional facilities. Our clients were impressed, and so were we.",
       profile: "./profile.png",
       company:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Oracle_logo.svg/2560px-Oracle_logo.svg.png",
@@ -44,7 +44,7 @@ const Testimonial = () => {
       name: "Agil Ghani Istikmal",
       role: "Student Tenant",
       content:
-        "Quibusdam asperiores delectus quaerat laboriosam, pariatur vitae minima.",
+        "The location is perfect—close to campus and affordable for students. The neighborhood feels safe and welcoming. Highly recommended!",
       profile: "./profile.png",
       company: "./company.png",
     },
@@ -52,7 +52,7 @@ const Testimonial = () => {
       name: "Sultan Akmal Ghiffari",
       role: "Event Group Organizer",
       content:
-        "Tempora amet explicabo voluptas impedit error deleniti perferendis.",
+        "Bringing a large group for an event was effortless. All participants’ needs were well taken care of, and the management team provided great support.",
       profile: "./profile.png",
       company: "./company.png",
     },
