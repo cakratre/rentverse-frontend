@@ -1,21 +1,33 @@
-# RENTVERSE by Cakratre Frontend
+# RENTVERSE by Cakratre
 
-Frontend aplikasi *Rentverse*
-Dibangun menggunakan Vite + React + TypeScript
+Frontend application for **RENTVERSE**, built with **Vite + React + TypeScript**.
 
 ---
 
-## 🚀 Cara Menjalankan
+## 🚀 Getting Started
 
-1. Clone repo:
+Clone the repository:
 
-   git clone https://github.com/cakratre/rentverse-frontend.git
-   cd rentverse-frontend
+```bash
+git clone https://github.com/cakratre/rentverse-frontend.git
+````
 
-2. Install dependensi:
+Navigate into the project folder:
 
-   npm install
+```bash
+cd rentverse-frontend
+```
 
-3. Jalankan server development:
+Install dependencies:
 
-   npm run dev
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open in your browser: [http://localhost:5173](http://localhost:5173)
